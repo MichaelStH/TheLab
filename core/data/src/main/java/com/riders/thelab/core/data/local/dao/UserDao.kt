@@ -33,6 +33,9 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE email LIKE :email")
     fun getUserByEmail(email: String): User
 
+    @Query("SELECT * FROM user WHERE email LIKE :email AND isGoogleAuth LIKE 1")
+    fun getUserWithGoogle(email: String): User?
+
     @Query("UPDATE user SET logged = :logged WHERE id LIKE :userId")
     fun setUserLogged(userId: Int, logged: Boolean = true)
 

@@ -23,6 +23,7 @@ interface IDb {
     fun getUserByName(lastname: String): User
     fun getUserByUsername(username: String): User
     fun getUserByEmail(email: String): User
+    fun getUserWithGoogle(email: String): User?
     fun setUserLogged(userId: Int)
     fun logUser(usernameOrMail: String, encodedPassword: String): User?
     fun logoutUser(userId: Int)

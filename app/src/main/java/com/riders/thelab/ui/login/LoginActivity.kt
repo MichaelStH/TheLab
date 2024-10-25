@@ -14,13 +14,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.window.layout.WindowMetricsCalculator
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.GoogleApiAvailability
 import com.riders.thelab.core.common.network.LabNetworkManager
 import com.riders.thelab.core.data.local.model.compose.WindowSizeClass
 import com.riders.thelab.core.google.BaseGoogleActivity
 import com.riders.thelab.core.google.GooglePlayServicesManager
+import com.riders.thelab.core.google.GoogleSignInManager
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
-import com.riders.thelab.core.ui.compose.utils.findActivity
 import com.riders.thelab.core.ui.utils.UIManager
 import com.riders.thelab.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
@@ -111,6 +112,8 @@ class LoginActivity : BaseGoogleActivity() {
                 }
             }
         }
+
+        mNavigator?.let { mViewModel.isGoogleUserLogged(it) }
     }
 
     override fun onResume() {
@@ -179,10 +182,26 @@ class LoginActivity : BaseGoogleActivity() {
     private fun authenticateWithGoogle() {
         Timber.d("authenticateWithGoogle()")
 
+        val signInManager = GoogleSignInManager.getInstance(this@LoginActivity)
+
+        // Check if the user is already signed in.
+        if (signInManager.isUserSignedInLegacy()) {
+            signInManager.mLastGoogleAccount?.let {
+                UIManager.showToast(
+                    this@LoginActivity,
+                    "User is already signed in with : ${it.email}"
+                )
+                mNavigator?.callMainActivity()
+            }
+        }
+
+        // Start the sign-in process.
+        signInManager.signInLegacy()
     }
 
-    override fun onConnected() {
+    override fun onConnected(account: GoogleSignInAccount) {
         Timber.d("onConnected()")
+        mNavigator?.let { navigator -> mViewModel.updateGoogleUser(navigator, account) }
     }
 
     override fun onDisconnected() {

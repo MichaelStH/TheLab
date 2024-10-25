@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.riders.thelab.core.common.utils.encodeToSha256
 import java.io.Serializable
 
@@ -34,6 +35,12 @@ data class User(
 
     @ColumnInfo("logged")
     var logged: Boolean = false
+
+    @ColumnInfo("isGoogleAuth")
+    var isGoogleAuth: Boolean = false
+
+    @ColumnInfo("profilePictureUri")
+    var profilePictureUri: String? = null
 
     constructor() : this("", "", "", "", "", 0L)
 
@@ -70,4 +77,17 @@ data class User(
             )
         )
     }
+}
+
+fun GoogleSignInAccount.toModel(): User = User(
+    firstname = this.givenName ?: "",
+    lastname = this.familyName ?: "",
+    username = this.displayName ?: "",
+    email = this.email ?: "",
+    password = this.id ?: "",
+    lastTimeRegistered = System.nanoTime()
+).apply {
+    this.profilePictureUri = photoUrl.toString()
+    this.isGoogleAuth = true
+    this.logged = true
 }

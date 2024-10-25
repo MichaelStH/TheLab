@@ -46,6 +46,8 @@ class UserProfileViewModel @Inject constructor(
         private set
     var passwordConfirmation: String by mutableStateOf("")
         private set
+    var photoUrl: String by mutableStateOf("")
+        private set
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val emailHasError: StateFlow<Boolean> =
@@ -99,6 +101,10 @@ class UserProfileViewModel @Inject constructor(
         this.passwordConfirmation = passwordConfirmation
     }
 
+    private fun updatePhotoUrl(photoUrl: String) {
+        this.photoUrl = photoUrl
+    }
+
 
     //////////////////////////////////////////
     // Coroutines
@@ -142,6 +148,7 @@ class UserProfileViewModel @Inject constructor(
             updateLastname(it.lastname)
             updateUsername(it.username)
             updateEmail(it.email)
+            it.profilePictureUri?.let { url -> updatePhotoUrl(url.toString()) }
         }
     }
 

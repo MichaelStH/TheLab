@@ -57,10 +57,10 @@ abstract class BaseGoogleActivity : BaseComponentActivity(), GoogleActions {
                                 Timber.e("task | addOnCompleteListener | Google Sign In Failed")
                             } else {
                                 Timber.i("task | addOnCompleteListener | Sign in successful")
-                                val account = task.result
+                                val account: GoogleSignInAccount? = task.result
 
-                                if (account != null) {
-                                    onConnected()
+                                account?.let { onConnected(it) } ?: run {
+                                    Timber.e("task | addOnCompleteListener | account is null")
                                 }
                             }
                         }

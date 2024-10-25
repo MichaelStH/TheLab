@@ -1,6 +1,7 @@
 package com.riders.thelab.feature.settings.main
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,9 +24,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImagePainter
 import com.riders.thelab.core.data.local.model.User
 import com.riders.thelab.core.data.local.model.compose.settings.UserUiState
 import com.riders.thelab.core.ui.R
@@ -40,6 +49,7 @@ import com.riders.thelab.core.ui.compose.annotation.DevicePreviews
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
 import com.riders.thelab.core.ui.compose.theme.Typography
 import com.riders.thelab.core.ui.compose.utils.findActivity
+import com.riders.thelab.core.ui.compose.utils.getCoilAsyncImagePainter
 import java.util.Locale
 
 
@@ -49,7 +59,7 @@ import java.util.Locale
 //
 ///////////////////////////////
 @Composable
-fun EditProfileCardRowItem(username: String, email: String) {
+fun EditProfileCardRowItem(username: String, email: String, photoUrl: String? = null) {
     val context = LocalContext.current
 
     Row(
@@ -73,7 +83,35 @@ fun EditProfileCardRowItem(username: String, email: String) {
 //                    colors = CardDefaults.cardColors(containerColor = if (!isSystemInDarkTheme()) md_theme_dark_primaryContainer else md_theme_light_primaryContainer)
             ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Icon(imageVector = Icons.Filled.Person, contentDescription = null)
+
+                    if (null == photoUrl)
+                        Icon(imageVector = Icons.Filled.Person, contentDescription = null)
+                    else {
+                        var isLoading by remember { mutableStateOf(true) }
+                        var isError by remember { mutableStateOf(false) }
+
+                        val painter = getCoilAsyncImagePainter(
+                            context = context,
+                            dataUrl = photoUrl,
+                            onState = { state ->
+                                isLoading = state is AsyncImagePainter.State.Loading
+                                isError = state is AsyncImagePainter.State.Error
+                            })
+                        val state = painter.state
+
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            painter = if (isError.not() && !LocalInspectionMode.current) {
+                                painter
+                            } else {
+                                painterResource(id = R.drawable.logo_colors)
+                            },
+                            // TODO b/226661685: Investigate using alt text of  image to populate content description
+                            // decorative image,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
             }
         }
@@ -159,6 +197,7 @@ fun UserSection(
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 EditProfileCardRowItem(
+                                    photoUrl = targetState.user.profilePictureUri.toString(),
                                     username = targetState.user.username,
                                     email = targetState.user.email
                                 )

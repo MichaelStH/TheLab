@@ -8,15 +8,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.riders.thelab.BuildConfig
 import com.riders.thelab.core.common.network.LabNetworkManager
 import com.riders.thelab.core.common.network.NetworkState
 import com.riders.thelab.core.common.utils.encodeToSha256
 import com.riders.thelab.core.data.IRepository
+import com.riders.thelab.core.data.local.model.User
 import com.riders.thelab.core.data.local.model.compose.LoginFieldsUIState
 import com.riders.thelab.core.data.local.model.compose.LoginUiState
+import com.riders.thelab.core.data.local.model.toModel
 import com.riders.thelab.core.data.remote.dto.ApiResponse
 import com.riders.thelab.core.ui.compose.base.BaseViewModel
+import com.riders.thelab.navigator.Navigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +30,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -301,14 +306,49 @@ class LoginViewModel @Inject constructor(private val repository: IRepository) : 
     fun onEvent(event: UiEvent) {
         Timber.d("onEvent() | $event")
 
-        when(event) {
-            is UiEvent.OnUpdateLogin -> { updateLogin(event.newLogin)}
-            is UiEvent.OnUpdatePassword -> { updatePassword(event.newPassword)}
-            is UiEvent.OnUpdateIsRememberCredentials -> { updateIsRememberCredentials(event.checked)}
-            is UiEvent.OnLoginClicked -> { login() }
+        when (event) {
+            is UiEvent.OnUpdateLogin -> {
+                updateLogin(event.newLogin)
+            }
+
+            is UiEvent.OnUpdatePassword -> {
+                updatePassword(event.newPassword)
+            }
+
+            is UiEvent.OnUpdateIsRememberCredentials -> {
+                updateIsRememberCredentials(event.checked)
+            }
+
+            is UiEvent.OnLoginClicked -> {
+                login()
+            }
+
             else -> {
                 Timber.e("onEvent() | Else branch")
             }
+        }
+    }
+
+    fun updateGoogleUser(navigator: Navigator, account: GoogleSignInAccount) {
+        val user: User = account.toModel()
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            val id = repository.insertUser(user)
+
+            if (-1L != id) {
+                saveUserDataInDataStore(email = user.email, password = user.password)
+                navigator.callMainActivity()
+            }
+        }
+    }
+
+    fun isGoogleUserLogged(navigator: Navigator) {
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            val email = repository.getEmailPref().first()
+            val googleUser: User? = repository.getUserWithGoogle(email)
+
+            googleUser?.let {
+                navigator.callMainActivity()
+            } ?: run { Timber.e("isGoogleUserLogged() | googleUser is null") }
         }
     }
 }

@@ -51,6 +51,8 @@ class DbImpl @Inject constructor(
 
     override fun getUserByEmail(email: String): User = mUserDao.getUserByEmail(email)
 
+    override fun getUserWithGoogle(email: String): User?  =  mUserDao.getUserWithGoogle(email)
+
     override fun setUserLogged(userId: Int) = mUserDao.setUserLogged(userId)
     override fun logUser(usernameOrMail: String, encodedPassword: String): User? {
         Timber.d("logUser() | username Or Mail: $usernameOrMail, password:$encodedPassword")
