@@ -18,6 +18,7 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
 
     implementation(files("libs/acrcloud-universal-sdk-1.3.22.jar"))
+//    implementation(project(":shazam-kit", configuration = "default"))
     implementation(project(":spotify-app-remote", configuration = "default"))
     // implementation(files("libs/spotify-auth-release-2.1.0.aar"))
     // implementation(files("libs/spotify-auth-store-release-2.1.0.aar"))

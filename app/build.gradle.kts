@@ -277,10 +277,6 @@ dependencies {
     kspAndroidTest(libs.hilt.ext.compiler)
 }
 
-/*kapt {
-    correctErrorTypes = true
-}*/
-
 // Aggregating Task
 // The Hilt Gradle plugin offers an option for performing Hilt’s classpath aggregation in a dedicated Gradle task.
 hilt {
