@@ -1,6 +1,6 @@
 [versions]
 # Gradle version
-androidGradlePlugin = "8.7.2"
+androidGradlePlugin = "8.7.3"
 # Google Services
 playServicesGradlePlugin = "4.4.2"
 crashlyticsGradlePlugin = "3.0.2"
