@@ -93,6 +93,7 @@ dependencies {
     // Glide
     api(libs.glide)
     ksp(libs.glide.compiler)
+    api(libs.glide.compose)
     api(libs.glide.blurry)
     api(libs.glide.transformation)
     api(libs.glide.landscapist)

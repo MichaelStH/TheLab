@@ -3,6 +3,7 @@ package com.riders.thelab.ui.login
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,7 +58,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.riders.thelab.R
 import com.riders.thelab.core.data.local.model.compose.LoginFieldsUIState
@@ -238,7 +238,17 @@ fun RememberUser(
             )
 
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        enabled = true,
+                        onClick = {
+                            uiEvent.invoke(
+                                UiEvent.OnUpdateIsRememberCredentials(
+                                    isRememberCredentialsChecked
+                                )
+                            )
+                        }),
                 text = stringResource(id = R.string.remember_me),
                 fontSize = 12.sp,
                 maxLines = 2,

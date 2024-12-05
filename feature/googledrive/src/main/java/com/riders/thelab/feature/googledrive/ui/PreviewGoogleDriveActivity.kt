@@ -17,8 +17,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -51,6 +54,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
+import com.google.api.services.drive.model.File
 import com.riders.thelab.core.ui.compose.annotation.DevicePreviews
 import com.riders.thelab.core.ui.compose.component.NoItemFound
 import com.riders.thelab.core.ui.compose.component.loading.LabLoader
@@ -62,9 +66,12 @@ import com.riders.thelab.core.ui.compose.theme.md_theme_light_primary
 import com.riders.thelab.core.ui.compose.theme.success
 import com.riders.thelab.core.ui.compose.utils.findActivity
 import com.riders.thelab.core.ui.compose.utils.getCoilAsyncImagePainter
+import com.riders.thelab.core.ui.compose.utils.getGlideImage
 import com.riders.thelab.feature.googledrive.R
 import com.riders.thelab.feature.googledrive.data.local.compose.GoogleDriveUiState
 import com.riders.thelab.feature.googledrive.data.local.compose.GoogleSignInState
+import com.skydoves.landscapist.glide.GlideImageState
+import com.skydoves.landscapist.glide.rememberGlideImageState
 import kotools.types.experimental.ExperimentalKotoolsTypesApi
 import timber.log.Timber
 
@@ -196,14 +203,74 @@ fun Header(signInState: GoogleSignInState, uiEvent: (UiEvent) -> Unit) {
     }
 }
 
+@Composable
+fun GoogleDriveImage(fileId: String) {
+    val context = LocalContext.current
+//    val imageUrl =   "https://drive.google.com/file/d/${file.id}/view?usp=sharing"
+    val imageUrl = "https://drive.google.com/uc?export=view&id=${fileId}"
+//    val imageUrl =   "https://drive.usercontent.google.com/download?export=view&id=${file.id}"
+//    val imageUrl =    "${Constants.BASE_ENDPOINT_GOOGLE_DRIVE_VIEW}${file.id}"
+
+    TheLabTheme {
+      /*  val driveFilePainter = getCoilAsyncImagePainter(
+            context,
+            dataUrl = imageUrl,
+            isSvg = false,
+            onState = { state ->
+                when (state) {
+                    AsyncImagePainter.State.Empty -> {
+                        Timber.i("state is AsyncImagePainter.State.Empty")
+                    }
+
+                    is AsyncImagePainter.State.Error -> {
+                        Timber.e("state is AsyncImagePainter.State.Error | ${state.result.throwable.message}")
+                    }
+
+                    is AsyncImagePainter.State.Loading -> {
+//                        Timber.i("state is AsyncImagePainter.State.Loading")
+                    }
+
+                    is AsyncImagePainter.State.Success -> {
+//                        Timber.d("state is AsyncImagePainter.State.Success")
+                    }
+                }
+            }
+        )
+
+        val u = rememberGlideImageState(initialState = GlideImageState.None)*/
+
+        getGlideImage(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(1.dp, 140.dp)
+                .padding(horizontal = 16.dp)
+                .clip(shape = RoundedCornerShape(35.dp)),
+            url = imageUrl
+        )
+
+        /*Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(1.dp, 140.dp)
+                .padding(horizontal = 16.dp)
+                .clip(shape = RoundedCornerShape(35.dp)),
+            painter = driveFilePainter,
+            contentDescription = "drive_file_image"
+        )*/
+    }
+}
+
 @OptIn(ExperimentalKotoolsTypesApi::class)
 @Composable
 fun GoogleDriveContentSuccess(
     signInState: GoogleSignInState,
     hasInternetConnection: Boolean,
+    driveFileList: List<File>,
     uiEvent: (UiEvent) -> Unit
 ) {
     val context = LocalContext.current
+
+    val driveListState = rememberLazyListState()
 
     TheLabTheme {
         Column(
@@ -234,65 +301,98 @@ fun GoogleDriveContentSuccess(
 
                         val painterState = painter?.state
 
-                        Column(
+                        LazyColumn(
                             modifier = Modifier.padding(top = 24.dp),
+                            state = driveListState,
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(
                                 16.dp,
                                 Alignment.Top
                             )
                         ) {
-                            if (null != painter && null != painterState) {
-                                Card(modifier = Modifier.clip(CircleShape), shape = CircleShape) {
-                                    AnimatedContent(
-                                        targetState = painterState,
-                                        transitionSpec = { fadeIn() togetherWith fadeOut() },
-                                        label = "animated content state"
-                                    ) { targetState: AsyncImagePainter.State ->
-                                        when (targetState) {
-                                            is AsyncImagePainter.State.Loading -> {
-                                                Timber.i("state is AsyncImagePainter.State.Loading")
-                                                CircularProgressIndicator(
-                                                    modifier = Modifier.size(36.dp),
-                                                    color = MaterialTheme.colorScheme.primary
-                                                )
-                                            }
-
-                                            is AsyncImagePainter.State.Success -> {
-                                                Timber.d("state is AsyncImagePainter.State.Success")
-                                                Box(
-                                                    modifier = Modifier
-                                                        .size(dimensionResource(id = com.riders.thelab.core.ui.R.dimen.max_card_image_height))
-                                                        .clip(CircleShape),
-                                                    contentAlignment = Alignment.Center
-                                                ) {
-                                                    Image(
-                                                        modifier = Modifier
-                                                            .fillMaxSize()
-                                                            .defaultMinSize(1.dp),
-                                                        painter = painter,
-                                                        contentDescription = "user_profile_picture",
-                                                        contentScale = ContentScale.Crop,
+                            item {
+                                if (null != painter && null != painterState) {
+                                    Card(
+                                        modifier = Modifier.clip(CircleShape),
+                                        shape = CircleShape
+                                    ) {
+                                        AnimatedContent(
+                                            targetState = painterState,
+                                            transitionSpec = { fadeIn() togetherWith fadeOut() },
+                                            label = "animated content state"
+                                        ) { targetState: AsyncImagePainter.State ->
+                                            when (targetState) {
+                                                is AsyncImagePainter.State.Loading -> {
+                                                    Timber.i("state is AsyncImagePainter.State.Loading")
+                                                    CircularProgressIndicator(
+                                                        modifier = Modifier.size(36.dp),
+                                                        color = MaterialTheme.colorScheme.primary
                                                     )
                                                 }
-                                            }
 
-                                            is AsyncImagePainter.State.Error -> {
-                                                Timber.e("state is AsyncImagePainter.State.Error | ${targetState.result}")
-                                            }
+                                                is AsyncImagePainter.State.Success -> {
+                                                    Timber.d("state is AsyncImagePainter.State.Success")
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(dimensionResource(id = com.riders.thelab.core.ui.R.dimen.max_card_image_height))
+                                                            .clip(CircleShape),
+                                                        contentAlignment = Alignment.Center
+                                                    ) {
+                                                        Image(
+                                                            modifier = Modifier
+                                                                .fillMaxSize()
+                                                                .defaultMinSize(1.dp),
+                                                            painter = painter,
+                                                            contentDescription = "user_profile_picture",
+                                                            contentScale = ContentScale.Crop,
+                                                        )
+                                                    }
+                                                }
 
-                                            else -> {
-                                                Timber.e("state | else branch")
+                                                is AsyncImagePainter.State.Error -> {
+                                                    Timber.e("state is AsyncImagePainter.State.Error | ${targetState.result}")
+                                                }
+
+                                                else -> {
+                                                    Timber.e("state | else branch")
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                            Text(text = targetState.account.displayName?.toString() ?: "N/A")
+                            item {
+                                Text(
+                                    text = targetState.account.displayName?.toString() ?: "N/A"
+                                )
+                            }
 
-                            Text(text = targetState.account.firstName?.toString() ?: "N/A")
-                            Text(text = targetState.account.familyName?.toString() ?: "N/A")
-                            Text(text = targetState.account.emailAddress.toString())
+                            item {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(text = targetState.account.firstName?.toString() ?: "N/A")
+                                    Text(text = targetState.account.familyName?.toString() ?: "N/A")
+                                    Text(text = targetState.account.emailAddress.toString())
+                                }
+                            }
+
+                            // Google drive files list
+                            if (driveFileList.isNotEmpty()) {
+                                item {
+                                    repeat(driveFileList.size) { index ->
+                                        val file = driveFileList[index]
+
+                                        if (file.mimeType.contains("image", true)) {
+                                            GoogleDriveImage(file.id)
+                                        }
+
+                                        Text(text = "${file.name} | ${file.mimeType}")
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -331,6 +431,7 @@ fun GoogleDriveContent(
     uiState: GoogleDriveUiState,
     signInState: GoogleSignInState,
     hasInternetConnection: Boolean,
+    driveFileList: List<File>,
     uiEvent: (UiEvent) -> Unit
 ) {
     TheLabTheme {
@@ -392,6 +493,7 @@ fun GoogleDriveContent(
                         GoogleDriveContentSuccess(
                             signInState = signInState,
                             hasInternetConnection = hasInternetConnection,
+                            driveFileList = driveFileList,
                             uiEvent = uiEvent
                         )
                     }
@@ -429,6 +531,7 @@ private fun PreviewGoogleDriveContentSuccess(@PreviewParameter(PreviewProviderGo
     TheLabTheme {
         GoogleDriveContentSuccess(
             signInState = signInState,
+            driveFileList = emptyList(),
             hasInternetConnection = true
         ) {}
     }
@@ -441,6 +544,7 @@ private fun PreviewGoogleDriveContent(@PreviewParameter(PreviewProviderUiState::
         GoogleDriveContent(
             uiState = state,
             signInState = GoogleSignInState.Disconnected,
+            driveFileList = emptyList(),
             hasInternetConnection = true
         ) {}
     }

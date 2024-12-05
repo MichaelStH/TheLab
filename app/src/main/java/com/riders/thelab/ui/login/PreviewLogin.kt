@@ -39,7 +39,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.riders.thelab.BuildConfig
 import com.riders.thelab.R
 import com.riders.thelab.core.data.local.model.compose.LoginFieldsUIState
 import com.riders.thelab.core.data.local.model.compose.LoginUiState
@@ -50,7 +49,6 @@ import com.riders.thelab.core.ui.compose.theme.TheLabTheme
 import com.riders.thelab.core.ui.compose.theme.md_theme_dark_onPrimaryContainer
 import com.riders.thelab.core.ui.compose.theme.md_theme_light_onPrimaryContainer
 import com.riders.thelab.core.ui.compose.utils.animatePlacement
-import com.riders.thelab.core.ui.compose.utils.findActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -250,9 +248,9 @@ fun LoginContent(
             delay(150L)
             arrangement = Arrangement.Bottom
 
-            if (BuildConfig.DEBUG) {
+            /*if (BuildConfig.DEBUG) {
                 uiEvent.invoke(UiEvent.OnLoginClicked)
-            }
+            }*/
         }
     }
 

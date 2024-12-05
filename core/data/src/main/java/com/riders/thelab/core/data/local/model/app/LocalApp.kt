@@ -64,7 +64,3 @@ data class LocalApp(
     @IgnoredOnParcel
     var date: String? = null
 }
-
-fun <T : Any> T.getClass(): KClass<T> {
-    return javaClass.kotlin
-}

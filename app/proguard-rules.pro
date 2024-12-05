@@ -34,3 +34,9 @@
 # Apache HTTP
 -keep class org.apache.http.** { *; }
 -dontwarn org.apache.http.**
+
+# Google credential manager
+-if class androidx.credentials.CredentialManager
+-keep class androidx.credentials.playservices.** {
+  *;
+}
