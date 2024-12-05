@@ -468,49 +468,53 @@ class WeatherViewModel @Inject constructor(
         WorkManager
             .getInstance(activity)
             .getWorkInfoByIdLiveData(workerId)
-            .observe(activity) { workInfo: WorkInfo ->
-                when (workInfo.state) {
-                    WorkInfo.State.ENQUEUED -> Timber.d("Worker ENQUEUED")
-                    WorkInfo.State.RUNNING -> {
-                        Timber.d("Worker RUNNING")
-                        workerStatus.value = WorkInfo.State.RUNNING
-                        updateUIState(WeatherUIState.Loading)
-                    }
-
-                    WorkInfo.State.SUCCEEDED -> {
-
-                        // Save data in database
-                        viewModelScope.launch(Dispatchers.IO) {
-                            repository.insertWeatherData(WeatherData(true))
+            .observe(activity) { workInfo: WorkInfo? ->
+                workInfo?.let {
+                    when (workInfo.state) {
+                        WorkInfo.State.ENQUEUED -> Timber.d("Worker ENQUEUED")
+                        WorkInfo.State.RUNNING -> {
+                            Timber.d("Worker RUNNING")
+                            workerStatus.value = WorkInfo.State.RUNNING
+                            updateUIState(WeatherUIState.Loading)
                         }
 
-                        updateUIState(WeatherUIState.Success(OneCallWeatherResponse()))
-                        workerStatus.value = WorkInfo.State.SUCCEEDED
-                    }
+                        WorkInfo.State.SUCCEEDED -> {
 
-                    WorkInfo.State.FAILED -> {
-                        Timber.e("Worker FAILED")
-                        workerStatus.value = WorkInfo.State.FAILED
+                            // Save data in database
+                            viewModelScope.launch(Dispatchers.IO) {
+                                repository.insertWeatherData(WeatherData(true))
+                            }
 
-                        activity.runOnUiThread {
-                            UIManager.showActionInSnackBar(
-                                activity,
-                                "Worker FAILED",
-                                SnackBarType.ALERT,
-                                "",
-                                null
-                            )
+                            updateUIState(WeatherUIState.Success(OneCallWeatherResponse()))
+                            workerStatus.value = WorkInfo.State.SUCCEEDED
                         }
 
-                        updateUIState(WeatherUIState.Error())
-                    }
+                        WorkInfo.State.FAILED -> {
+                            Timber.e("Worker FAILED")
+                            workerStatus.value = WorkInfo.State.FAILED
 
-                    WorkInfo.State.BLOCKED -> Timber.e("Worker BLOCKED")
-                    WorkInfo.State.CANCELLED -> Timber.e("Worker CANCELLED")
-                    else -> {
-                        Timber.e("Else branch")
-                        updateUIState(WeatherUIState.Error())
+                            activity.runOnUiThread {
+                                UIManager.showActionInSnackBar(
+                                    activity,
+                                    "Worker FAILED",
+                                    SnackBarType.ALERT,
+                                    "",
+                                    null
+                                )
+                            }
+
+                            updateUIState(WeatherUIState.Error())
+                        }
+
+                        WorkInfo.State.BLOCKED -> Timber.e("Worker BLOCKED")
+                        WorkInfo.State.CANCELLED -> Timber.e("Worker CANCELLED")
+                        else -> {
+                            Timber.e("Else branch")
+                            updateUIState(WeatherUIState.Error())
+                        }
                     }
+                } ?: run {
+                    Timber.e("listenToTheWorker() | Worker info is null")
                 }
             }
     }

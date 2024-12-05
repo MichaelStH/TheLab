@@ -53,6 +53,10 @@ class TheLabApplication : MultiDexApplication(), LifecycleEventObserver, Configu
         }
         .build()
 
+    init {
+        mInstance = this
+    }
+
 
     ////////////////////////////////////////
     //
@@ -81,14 +85,22 @@ class TheLabApplication : MultiDexApplication(), LifecycleEventObserver, Configu
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
 
-        /*if (level == TRIM_MEMORY_UI_HIDDEN) {
-            notifyAppInBackground()
-        }*/
+        when (level) {
+            TRIM_MEMORY_UI_HIDDEN -> {
+                Timber.w("onTrimMemory() | App went background")
+//                notifyAppInBackground()
+            }
 
-        if (level == TRIM_MEMORY_RUNNING_LOW) {
-            Timber.e(
+            @Suppress("DEPRECATION")
+            TRIM_MEMORY_RUNNING_LOW -> Timber.e(
                 "The device is running much lower on memory. Your app is running and not killable, but please release unused resources to improve system performance"
             )
+
+            else -> {
+                Timber.e(
+                    "onTrimMemory() | else branch level type : $level"
+                )
+            }
         }
     }
 
@@ -243,13 +255,10 @@ class TheLabApplication : MultiDexApplication(), LifecycleEventObserver, Configu
         private var mInstance: TheLabApplication? = null
 
         @Synchronized
-        fun getInstance(): TheLabApplication {
-
-            if (null == mInstance) {
-                mInstance = TheLabApplication()
+        fun getInstance(): TheLabApplication = mInstance ?: synchronized(this) {
+            mInstance ?: TheLabApplication().also {
+                mInstance = it
             }
-
-            return mInstance as TheLabApplication
         }
     }
 }
