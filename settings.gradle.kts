@@ -14,7 +14,13 @@ pluginManagement {
 
     repositories {
         gradlePluginPortal()
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
 
         maven { url = uri("https://jitpack.io") }
@@ -83,6 +89,7 @@ include(":feature:theaters")
 include(":feature:transitions")
 include(":feature:weather")
 include(":feature:youtube")
+include(":shazam-kit")
 include(":spotify-app-remote")
 include(":spotify-auth")
 include(":spotify-auth-store")
