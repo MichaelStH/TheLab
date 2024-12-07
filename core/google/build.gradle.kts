@@ -4,6 +4,13 @@ plugins {
 
 android {
     namespace = "com.riders.thelab.core.google"
+
+    packaging {
+        resources {
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 dependencies {

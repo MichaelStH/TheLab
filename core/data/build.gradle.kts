@@ -1,7 +1,7 @@
 plugins {
-    id("thelab.android.library")
-    id("thelab.android.hilt")
-    id("thelab.android.room")
+    alias(libs.plugins.thelab.library)
+    alias(libs.plugins.thelab.hilt)
+    alias(libs.plugins.thelab.room)
     id("thelab.android.library.jacoco")
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.serialization)
