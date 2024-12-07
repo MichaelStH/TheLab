@@ -83,7 +83,8 @@ class GoogleDriveActivity : BaseGoogleActivity(), OnConnectionFailedListener {
                             GoogleDriveContent(
                                 uiState = uiState,
                                 signInState = signInState,
-                                hasInternetConnection = mViewModel.isConnected
+                                hasInternetConnection = mViewModel.isConnected,
+                                driveFileList = mViewModel.driveFileList
                             ) { event -> mViewModel.onEvent(this@GoogleDriveActivity, event) }
                         }
                     }

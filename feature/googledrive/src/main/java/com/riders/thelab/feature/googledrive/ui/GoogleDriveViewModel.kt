@@ -2,10 +2,13 @@ package com.riders.thelab.feature.googledrive.ui
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewModelScope
+import com.google.api.services.drive.model.File
 import com.riders.thelab.core.common.network.LabNetworkManager
 import com.riders.thelab.core.common.network.NetworkState
 import com.riders.thelab.core.ui.compose.base.BaseViewModel
@@ -52,6 +55,9 @@ class GoogleDriveViewModel @Inject constructor() : BaseViewModel(), CoroutineSco
 
     private val networkState by lazy { this.mNetworkManager!!.networkState }
     val isConnected: Boolean by derivedStateOf { networkState.value is NetworkState.Available }
+
+    var driveFileList: SnapshotStateList<File> = mutableStateListOf()
+    private set
 
     fun updateGoogleDriveUiState(newState: GoogleDriveUiState) {
         this._googleDriveUiState.value = newState
