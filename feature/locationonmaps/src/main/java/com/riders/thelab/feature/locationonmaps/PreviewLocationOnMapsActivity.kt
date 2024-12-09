@@ -41,6 +41,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.widgets.DisappearingScaleBar
 import com.riders.thelab.core.common.utils.toLocation
 import com.riders.thelab.core.ui.compose.annotation.DevicePreviews
+import com.riders.thelab.core.ui.compose.component.LabBackButton
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -89,7 +90,7 @@ fun LocationOnMapsContent(
     }
 //    val location = (1.35 to 103.87).toLocation()
     val userPosition = LatLng(location.latitude, location.longitude)
-    val cameraPositionState = rememberCameraPositionState {
+    val cameraPositionState = rememberCameraPositionState(key = "location_on_maps_camera_position_state") {
         position = CameraPosition.fromLatLngZoom(userPosition, 10f)
     }
 
@@ -132,6 +133,7 @@ fun LocationOnMapsContent(
                         properties = properties,
                         uiSettings = uiSettings,
                         location = location,
+                        cameraPositionState = cameraPositionState,
                         myLocationButtonPosition = this.maxHeight - 140.dp,
                         markerTitle = markerTitle,
                         markerSnippet = markerSnippet,
@@ -140,13 +142,12 @@ fun LocationOnMapsContent(
                     )
                 }
 
-                DisappearingScaleBar(
+                LabBackButton(
                     modifier = Modifier
                         .zIndex(2f)
                         .statusBarsPadding()
                         .padding(top = 16.dp, start = 16.dp)
-                        .align(Alignment.TopStart),
-                    cameraPositionState = cameraPositionState
+                        .align(Alignment.TopStart)
                 )
 
                 Switch(
@@ -158,6 +159,15 @@ fun LocationOnMapsContent(
                     onCheckedChange = {
                         uiSettings = uiSettings.copy(zoomControlsEnabled = it)
                     }
+                )
+
+                DisappearingScaleBar(
+                    modifier = Modifier
+                        .zIndex(2f)
+                        .statusBarsPadding()
+                        .padding(top = 16.dp, start = 16.dp)
+                        .align(Alignment.BottomStart),
+                    cameraPositionState = cameraPositionState
                 )
 
                 AnimatedVisibility(

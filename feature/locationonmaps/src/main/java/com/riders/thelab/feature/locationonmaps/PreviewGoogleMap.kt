@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraMoveStartedReason
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
@@ -40,6 +41,7 @@ fun GoogleMap(
     properties: MapProperties,
     uiSettings: MapUiSettings,
     location: Location,
+    cameraPositionState: CameraPositionState? = null,
     markerTitle: String? = null,
     markerSnippet: String? = null,
     myLocationButtonPosition: Dp = 64.dp,
@@ -48,14 +50,14 @@ fun GoogleMap(
 ) {
     val scope = rememberCoroutineScope()
     val userPosition = LatLng(location.latitude, location.longitude)
-    val cameraPositionState = rememberCameraPositionState {
+    val defaultCameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(userPosition, 10f)
     }
 
     TheLabTheme {
         GoogleMap(
             modifier = modifier,
-            cameraPositionState = cameraPositionState,
+            cameraPositionState = cameraPositionState ?: defaultCameraPositionState,
             properties = properties,
             uiSettings = uiSettings,
             contentPadding = PaddingValues(top = myLocationButtonPosition),
@@ -84,7 +86,9 @@ fun GoogleMap(
     }
 
     LaunchedEffect(cameraPositionState) {
-        if (CameraMoveStartedReason.GESTURE == cameraPositionState.cameraMoveStartedReason) {
+        if (CameraMoveStartedReason.GESTURE == cameraPositionState?.cameraMoveStartedReason
+            || CameraMoveStartedReason.GESTURE == defaultCameraPositionState.cameraMoveStartedReason
+        ) {
             Timber.d("Recomposition | CameraMoveStartedReason.GESTURE, movement by user")
             // movement by user
             mapUiEvent.invoke(GoogleMapUiEvent.OnMapTouched)
