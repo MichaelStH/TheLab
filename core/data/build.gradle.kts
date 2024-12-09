@@ -99,9 +99,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
 
-    /* Retrofit using RxJava3, Okhttp, Okhttp logging interceptor, Moshi, Serialization  */
+    /* Retrofit using RxJava3, Okhttp, Okhttp logging interceptor, Gson, Moshi, Serialization  */
     api(libs.retrofit.core)
-    api(libs.retrofit.moshi)
     api(libs.retrofit.kotlin.serialization)
 
     // OkHttp
@@ -110,11 +109,6 @@ dependencies {
     // define any required OkHttp artifacts without version
     api(libs.okhttp)
     api(libs.okhttp.logging)
-
-    // Moshi
-    api(libs.moshi)
-    api(libs.moshi.kotlin)
-    ksp(libs.moshi.kotlin.codegen)
 
     api(libs.kotools.types)
 

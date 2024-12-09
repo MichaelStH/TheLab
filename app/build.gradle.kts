@@ -240,9 +240,6 @@ dependencies {
 
     // OkHttp: provided by data module
 
-    // Moshi: provided by data module
-    ksp(libs.moshi.kotlin.codegen)
-
     // MPAndroidChart
     implementation(libs.mpandroidchart)
 

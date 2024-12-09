@@ -226,7 +226,6 @@ internal object ApiModule {
     }
 
 
-    @OptIn(ExperimentalSerializationApi::class)
     private val json = Json {
         ignoreUnknownKeys = true
         isLenient = true

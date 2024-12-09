@@ -41,11 +41,6 @@ dependencies {
     // define any required OkHttp artifacts without version
     api(libs.okhttp)
 
-    // Moshi
-    /*api(libs.moshi)
-    api(libs.moshi.kotlin)
-    ksp(libs.moshi.kotlin.codegen)*/
-
 
     ///////////////////////////////////
     // Tests Dependencies

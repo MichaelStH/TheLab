@@ -157,7 +157,7 @@ class ApiImpl @Inject constructor(
             )
 
 
-    private suspend fun ResponseBody.downloadCitiesFile(
+    private fun ResponseBody.downloadCitiesFile(
         directory: File,
         filename: String
     ): Flow<Download> = flow {
