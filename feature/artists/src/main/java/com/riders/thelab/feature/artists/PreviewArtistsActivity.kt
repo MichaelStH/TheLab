@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -27,6 +28,8 @@ import com.riders.thelab.core.data.local.model.music.ArtistModel
 import com.riders.thelab.core.ui.compose.annotation.DevicePreviews
 import com.riders.thelab.core.ui.compose.component.NoItemFound
 import com.riders.thelab.core.ui.compose.component.loading.LabLoader
+import com.riders.thelab.core.ui.compose.component.toolbar.TheLabTopAppBar
+import com.riders.thelab.core.ui.compose.component.toolbar.ToolbarSize
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
 import timber.log.Timber
 
@@ -93,7 +96,17 @@ fun ArtistsContentSuccess(artists: List<ArtistModel>) {
 @Composable
 fun ArtistsContent(state: ArtistsUiState) {
     TheLabTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { contentPadding ->
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                TheLabTopAppBar(
+                    toolbarSize = ToolbarSize.SMALL,
+                    title = stringResource(R.string.app_name_artists),
+                    withGradientBackground = true,
+                    actions = null
+                )
+            }
+        ) { contentPadding ->
             AnimatedContent(
                 modifier = Modifier
                     .fillMaxSize()

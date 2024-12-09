@@ -71,10 +71,13 @@ class TheatersActivity : BaseComponentActivity() {
                                 trendingTvShows = trendingTvShows,
                                 isRefreshing = mTheatersViewModel.isRefreshing,
                                 uiEvent = { event ->
-                                when(event) {
-                                    is UiEvent.OnItemDetailClicked-> launchTMDBItemDetailActivity(event.item)
-                                    else -> mTheatersViewModel::onEvent
-                                }
+                                    when (event) {
+                                        is UiEvent.OnItemDetailClicked -> launchTMDBItemDetailActivity(
+                                            event.item
+                                        )
+
+                                        else -> mTheatersViewModel.onEvent(event)
+                                    }
                                 }
                             )
                         }

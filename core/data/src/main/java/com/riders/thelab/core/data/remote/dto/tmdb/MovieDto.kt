@@ -55,6 +55,40 @@ data class MovieDto(
             3455
         )
 
+        val platform2MockMovie = MovieDto(
+            id = 1125510,
+            title = "The Platform 2",
+            backdropPath = "/3m0j3hCS8kMAaP9El6Vy5Lqnyft.jpg",
+            genresID = setOf(878, 53, 27, 18),
+            originalLanguage = "es",
+            originalTitle = "El hoyo 2",
+            overview = "After a mysterious leader imposes his law in a brutal system of vertical cells, a new arrival battles against a dubious food distribution method.",
+            popularity = 1012.359,
+            poster = "/z2m3g8QOEMNyslgBU5vsyzRwgSz.jpg",
+            releaseDate = "2024-09-27",
+            video = false,
+            adult = false,
+            rating = 5.7,
+            voteNumber = 701
+        )
+
+        val venomMockMovie = MovieDto(
+            id = 912649,
+            title = "Venom: The Last Dance",
+            backdropPath = "/3V4kLQg0kSqPLctI5ziYWabAZYF.jpg",
+            genresID = setOf(28, 878, 12),
+            originalLanguage = "en",
+            originalTitle = "Venom: The Last Dance",
+            overview = "Eddie and Venom are on the run. Hunted by both of their worlds and with the net closing in, the duo are forced into a devastating decision that will bring the curtains down on Venom and Eddie's last dance.",
+            popularity = 2994.212,
+            poster = "/k42Owka8v91trK1qMYwCQCNwJKr.jpg",
+            releaseDate = "2024-10-22",
+            video = false,
+            adult = false,
+            rating = 6.7,
+            voteNumber = 94
+        )
+
         /*fun getMockMovie(): MovieDto = MovieDto(
             0,
             "",

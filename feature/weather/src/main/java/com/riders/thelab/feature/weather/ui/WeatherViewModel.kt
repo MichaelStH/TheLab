@@ -470,7 +470,7 @@ class WeatherViewModel @Inject constructor(
             .getWorkInfoByIdLiveData(workerId)
             .observe(activity) { workInfo: WorkInfo? ->
                 workInfo?.let {
-                    when (workInfo.state) {
+                    when (it.state) {
                         WorkInfo.State.ENQUEUED -> Timber.d("Worker ENQUEUED")
                         WorkInfo.State.RUNNING -> {
                             Timber.d("Worker RUNNING")
@@ -514,7 +514,8 @@ class WeatherViewModel @Inject constructor(
                         }
                     }
                 } ?: run {
-                    Timber.e("listenToTheWorker() | Worker info is null")
+                    Timber.e("listenToTheWorker() | WorkInfo is null")
+                    updateUIState(WeatherUIState.Error())
                 }
             }
     }

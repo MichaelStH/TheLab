@@ -27,47 +27,16 @@ class PreviewProviderTMDBVideoModel : PreviewParameterProvider<TMDBVideoModel> {
 class PreviewProviderTMDBItemModel : PreviewParameterProvider<TMDBItemModel> {
     override val values: Sequence<TMDBItemModel>
         get() = sequenceOf(
-            MovieDto(
-                0,
-                "",
-                false,
-                "/efpojdpcjzidcjpzdko.jpg",
-                emptySet(),
-                "en-US",
-                "Expend4bles",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-                50.6,
-                "/fv45onsdvdv.jpg",
-                "2023-10-25",
-                false,
-                7.6,
-                3455
-            ).toItemModel()
+            MovieDto.venomMockMovie.toItemModel(),
+            MovieDto.platform2MockMovie.toItemModel()
         )
 }
 
 class PreviewProviderTMDBDetailUiState : PreviewParameterProvider<TMDBUiState.TMDBDetailUiState> {
     override val values: Sequence<TMDBUiState.TMDBDetailUiState>
         get() = sequenceOf(
-            TMDBUiState.TMDBDetailUiState.Error(""),
-            TMDBUiState.TMDBDetailUiState.Success(
-                MovieDto(
-                    0,
-                    "",
-                    false,
-                    "/efpojdpcjzidcjpzdko.jpg",
-                    emptySet(),
-                    "en-US",
-                    "Expend4bles",
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-                    50.6,
-                    "/fv45onsdvdv.jpg",
-                    "2023-10-25",
-                    false,
-                    7.6,
-                    3455
-                ).toItemModel()
-            ),
+            TMDBUiState.TMDBDetailUiState.Error("Error while fetching movie's details"),
+            TMDBUiState.TMDBDetailUiState.Success(MovieDto.venomMockMovie.toItemModel()),
             TMDBUiState.TMDBDetailUiState.Loading
         )
 }

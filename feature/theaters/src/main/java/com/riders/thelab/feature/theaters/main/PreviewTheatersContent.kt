@@ -84,17 +84,18 @@ fun TheatersContent(
                     mainCustomContent = {
                         AnimatedContent(
                             targetState = networkState,
-                            transitionSpec = { transitionSpec() },
+                            transitionSpec = { transitionSpec.invoke() },
                             label = "network state animation"
                         ) { targetState: NetworkState ->
                             when (targetState) {
                                 is NetworkState.Available -> {
                                     LabTabRow(
                                         selectedItemIndex = tabRowSelected,
-                                        items = categories
-                                    ) {
-                                        uiEvent.invoke(UiEvent.OnUpdateTabRowSelected(it))
-                                    }
+                                        items = categories,
+                                        onClick = { index ->
+                                            uiEvent.invoke(UiEvent.OnUpdateTabRowSelected(index))
+                                        }
+                                    )
                                 }
 
                                 else -> {

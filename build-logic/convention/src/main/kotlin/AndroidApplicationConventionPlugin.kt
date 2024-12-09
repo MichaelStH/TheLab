@@ -6,6 +6,7 @@ import com.riders.thelab.configureTimber
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -16,6 +17,11 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("kotlin-parcelize")
                 apply("kotlinx-serialization")
                 apply("com.google.devtools.ksp")
+            }
+
+            // Configure Jvm ToolChain
+            with(kotlinExtension) {
+                jvmToolchain(21)
             }
 
             extensions.configure<ApplicationExtension> {

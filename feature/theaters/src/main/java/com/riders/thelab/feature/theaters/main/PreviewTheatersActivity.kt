@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.riders.thelab.core.common.network.NetworkState
 import com.riders.thelab.core.data.local.model.compose.theaters.TMDBUiState
+import com.riders.thelab.core.data.remote.dto.tmdb.TMDBMovieResponse
 import com.riders.thelab.core.ui.compose.annotation.DevicePreviews
 import com.riders.thelab.core.ui.compose.component.network.PreviewProviderNetworkState
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
@@ -126,7 +127,7 @@ private fun PreviewTheatersContainer(@PreviewParameter(PreviewProviderNetworkSta
             categories = listOf("Movies", "Tv Shows"),
             tabRowSelected = 0,
             trendingMovieItem = TMDBUiState.TMDBTrendingMovieItemUiState.Loading,
-            movies = TMDBUiState.TMDBMoviesUiState.Loading,
+            movies = TMDBUiState.TMDBMoviesUiState.Success(TMDBMovieResponse.mockTMDBMovieResponse),
             upcomingMovies = TMDBUiState.TMDBUpcomingMoviesUiState.Loading,
             trendingTvShowItem = TMDBUiState.TMDBTrendingTvShowItemUiState.Loading,
             trendingTvShows = TMDBUiState.TMDBTvShowsUiState.Loading,

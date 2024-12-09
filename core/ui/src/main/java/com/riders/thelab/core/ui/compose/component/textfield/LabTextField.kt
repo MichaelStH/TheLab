@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -57,6 +58,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -88,8 +90,13 @@ fun LabTextField(
     onUpdateQuery: (String) -> Unit,
     placeholder: String,
     label: String,
+    textColor: Color = Color.LightGray,
     leadingContent: @Composable (() -> Unit)? = null,
-    trailingContent: @Composable (() -> Unit)? = null
+    trailingContent: @Composable (() -> Unit)? = null,
+    imeAction: ImeAction = ImeAction.Done,
+    onImeActionsSearch: (() -> Unit)? = null,
+    onImeActionsDone: (() -> Unit)? = null,
+    hasUnderlineVisible: Boolean = false
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -141,9 +148,9 @@ fun LabTextField(
                 ),
             value = query,
             onValueChange = onUpdateQuery,
-            textStyle = TextStyle(textAlign = TextAlign.Justify, color = Color.LightGray),
-            placeholder = { Text(text = placeholder, color = Color.LightGray) },
-            label = { Text(text = label, color = Color.LightGray) },
+            textStyle = TextStyle(textAlign = TextAlign.Justify, color = textColor),
+            placeholder = { Text(text = placeholder, color = textColor) },
+            label = { Text(text = label, color = textColor) },
             interactionSource = interactionSource,
             enabled = true,
             singleLine = true,
@@ -152,10 +159,28 @@ fun LabTextField(
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.None,
                 autoCorrectEnabled = false,
-                keyboardType = KeyboardType.Text
+                keyboardType = KeyboardType.Text,
+                imeAction = imeAction
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    // perform some action
+                    focusManager.clearFocus()
+                    onImeActionsSearch?.invoke()
+                },
+                onDone = {
+                    // perform some action
+                    focusManager.clearFocus()
+                    onImeActionsDone?.invoke()
+                }
             ),
             visualTransformation = VisualTransformation.None,
-            colors = TextFieldDefaults.colors(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = if (!hasUnderlineVisible) Color.Transparent else MaterialTheme.colorScheme.onPrimary,
+                unfocusedContainerColor = if (!hasUnderlineVisible) Color.Transparent else MaterialTheme.colorScheme.onPrimary,
+                focusedSupportingTextColor = if (!hasUnderlineVisible) Color.Transparent else MaterialTheme.colorScheme.onPrimary,
+                unfocusedSupportingTextColor = if (!hasUnderlineVisible) Color.Transparent else MaterialTheme.colorScheme.onPrimary
+            ),
             readOnly = false
         )
     }

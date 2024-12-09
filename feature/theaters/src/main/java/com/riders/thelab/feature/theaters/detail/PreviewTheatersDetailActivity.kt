@@ -1,6 +1,7 @@
 package com.riders.thelab.feature.theaters.detail
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
@@ -20,8 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -39,17 +37,20 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImagePainter
+import coil.size.Scale
 import com.riders.thelab.core.data.local.model.compose.theaters.TMDBUiState.TMDBDetailUiState
 import com.riders.thelab.core.ui.R
 import com.riders.thelab.core.ui.compose.annotation.DevicePreviews
 import com.riders.thelab.core.ui.compose.component.Lottie
 import com.riders.thelab.core.ui.compose.component.ProvidedBy
+import com.riders.thelab.core.ui.compose.component.loading.LabLoader
 import com.riders.thelab.core.ui.compose.component.toolbar.TheLabTopAppBar
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
 import com.riders.thelab.core.ui.compose.utils.getCoilAsyncImagePainter
+import com.riders.thelab.core.ui.compose.utils.toColor
 import com.riders.thelab.core.ui.utils.loadImage
-import com.riders.thelab.feature.theaters.previewprovider.PreviewProviderTMDBDetailUiState
 import com.riders.thelab.feature.theaters.main.trendingItemImageHeight
+import com.riders.thelab.feature.theaters.previewprovider.PreviewProviderTMDBDetailUiState
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -66,13 +67,29 @@ fun TheatersDetailContent(
     isTrailerVisible: Boolean,
     onTrailerVisible: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
+
+    /* Create the Palette, pass the bitmap to it */
+    var palette: Palette
+
+    /* Get the dark vibrant swatch */
+    val lightVibrantSwatch = remember { mutableIntStateOf(0) }
+    val darkVibrantSwatch = remember { mutableIntStateOf(0) }
+    val dominantSwatch = remember { mutableIntStateOf(0) }
+
+    val animateNavigationButtonColor = remember { Animatable(initialValue = Color.White) }
 
     Timber.d("TheatersDetailContent() | Recomposition")
 
     TheLabTheme(darkTheme = true) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            topBar = { TheLabTopAppBar(navigationIcon = {}) }
+            topBar = {
+                TheLabTopAppBar(
+                    title = "",
+                    navigationIconColor = animateNavigationButtonColor.value
+                )
+            }
         ) {
             BoxWithConstraints(
                 modifier = Modifier
@@ -103,17 +120,18 @@ fun TheatersDetailContent(
                                     tmdbState.item.getBackdropImageUrl()
                                 },
                                 isSvg = false,
+                                scale = Scale.FILL,
                                 placeholderResId = com.riders.thelab.core.ui.R.drawable.logo_colors
                             )
                         val state = painter.state
 
                         /* Create the Palette, pass the bitmap to it */
-                        var palette: Palette
+//                         var palette: Palette
 
                         /* Get the dark vibrant swatch */
-                        val lightVibrantSwatch = remember { mutableIntStateOf(0) }
-                        val darkVibrantSwatch = remember { mutableIntStateOf(0) }
-                        val dominantSwatch = remember { mutableIntStateOf(0) }
+//                         val lightVibrantSwatch = remember { mutableIntStateOf(0) }
+//                         val darkVibrantSwatch = remember { mutableIntStateOf(0) }
+//                         val dominantSwatch = remember { mutableIntStateOf(0) }
 
                         LazyColumn(
                             modifier = Modifier
@@ -132,36 +150,31 @@ fun TheatersDetailContent(
                                         .height(trendingItemImageHeight),
                                     contentAlignment = Alignment.Center
                                 ) {
-
                                     AnimatedContent(
+                                        modifier = Modifier.fillParentMaxSize(),
                                         targetState = state,
                                         transitionSpec = { fadeIn() + expandIn() togetherWith fadeOut() },
-                                        label = "animated content state"
+                                        label = "animated content state",
+                                        contentAlignment = Alignment.Center
                                     ) { targetState: AsyncImagePainter.State ->
 
                                         when (targetState) {
                                             is AsyncImagePainter.State.Loading -> {
                                                 Timber.i("state is AsyncImagePainter.State.Loading")
-                                                CircularProgressIndicator(
-                                                    modifier = Modifier.scale(0.5f),
-                                                    color = MaterialTheme.colorScheme.primary
-                                                )
+                                                LabLoader(modifier = Modifier.size(56.dp))
                                             }
 
                                             is AsyncImagePainter.State.Success -> {
                                                 Timber.d("state is AsyncImagePainter.State.Success")
 
                                                 Image(
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .defaultMinSize(1.dp)
-                                                        .height(trendingItemImageHeight),
+                                                    modifier = Modifier.fillMaxSize(),
                                                     painter = painter,
-                                                    contentDescription = "movie image",
-                                                    contentScale = ContentScale.Crop,
+                                                    contentDescription = "movie_image",
+                                                    contentScale = ContentScale.FillBounds,
                                                 )
 
-                                                LaunchedEffect(key1 = AsyncImagePainter.State.Empty.painter) {
+                                                LaunchedEffect(key1 = painter) {
                                                     scope.launch {
                                                         val image = painter.loadImage()
 
@@ -181,6 +194,9 @@ fun TheatersDetailContent(
                                                         dominantSwatch.intValue =
                                                             palette.dominantSwatch?.rgb ?: 0
                                                         //paletteColorList.value = generatePalette(palette)
+                                                        animateNavigationButtonColor.animateTo(
+                                                            lightVibrantSwatch.intValue.toColor()
+                                                        )
                                                     }
                                                 }
                                             }
@@ -200,9 +216,9 @@ fun TheatersDetailContent(
                             // Titles
                             item {
                                 Titles(
-                                    tmdbState.item.title,
-                                    tmdbState.item.originalTitle,
-                                    Color(lightVibrantSwatch.intValue)
+                                    title = tmdbState.item.title,
+                                    originalTitle = tmdbState.item.originalTitle,
+                                    textColor = Color(lightVibrantSwatch.intValue)
                                 )
                             }
 
@@ -266,7 +282,8 @@ fun TheatersDetailContent(
                                         if (!isTrailerVisible) Color.Transparent else Color.Black.copy(
                                             alpha = .83f
                                         )
-                                    ), contentAlignment = Alignment.Center
+                                    ),
+                                contentAlignment = Alignment.Center
                             ) {
                                 PopUpTrailer(
                                     itemName = tmdbState.item.title,
@@ -287,7 +304,6 @@ fun TheatersDetailContent(
                     }
 
                     is TMDBDetailUiState.Error -> {
-
                     }
                 }
             }

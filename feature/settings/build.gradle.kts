@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":core:analytics"))
     implementation(project(":core:data"))
     implementation(project(":core:common"))
+    implementation(project(":core:google"))
     implementation(project(":core:ui"))
 
 

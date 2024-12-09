@@ -94,7 +94,7 @@ glide = "4.16.0"
 glideCompose = "1.0.0-beta01"
 glideTransformation = "4.3.0"
 # Hilt (for gradle plugin version and dependency)
-hilt = "2.52"
+hilt = "2.53"
 hiltExt = "1.2.0"
 jacoco = "0.8.7"
 junit = "1.1.5"
@@ -103,7 +103,8 @@ junit4 = "4.13.2"
 kotlin = "2.1.0"
 kotlinxCoroutines = "1.9.0"
 kotlinxDatetime = "0.6.1"
-kotlinPlayServices = "1.8.1"
+kotlinPlayServices = "1.9.0"
+kotlinxMetadataJvm = "0.4.0"
 kotlinxSerializationJson = "1.7.3"
 # KSP - Kotlin Symbol Processing (for gradle plugin version and dependency)
 ksp = "2.1.0-1.0.29"
@@ -139,7 +140,6 @@ types = "4.5.1"
 youtubePlayer = "12.1.0"
 zxing = "3.5.3"
 zxingAndroid = "3.3.0"
-junitVersion = "1.2.1"
 
 
 [libraries]
@@ -319,6 +319,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlin-parcelize = { group = "org.jetbrains.kotlin", name = "kotlin-parcelize-runtime", version.ref = "kotlin" }
+kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinxMetadataJvm" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "kotlinPlayServices" }
 kotools-types = { group = "org.kotools", name = "types", version.ref = "types" }
@@ -371,7 +372,7 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 play-services-gradlePlugin = { group = "com.google.gms", name = "google-services", version.ref = "playServicesGradlePlugin" }
 firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "crashlyticsGradlePlugin" }
 firebase-performances-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "performancesGradlePlugin" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

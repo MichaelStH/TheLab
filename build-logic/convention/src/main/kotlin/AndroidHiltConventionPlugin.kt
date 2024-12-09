@@ -20,6 +20,7 @@ class AndroidHiltConventionPlugin : Plugin<Project> {
                 "implementation"(libs.findLibrary("hilt.android").get())
                 "ksp"(libs.findLibrary("hilt.compiler").get())
                 "kspAndroidTest"(libs.findLibrary("hilt.compiler").get())
+                "ksp"(libs.findLibrary("kotlinx.metadata.jvm").get())
             }
         }
     }
