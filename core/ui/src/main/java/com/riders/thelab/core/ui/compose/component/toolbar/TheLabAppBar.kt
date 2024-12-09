@@ -248,9 +248,8 @@ fun TheLabTopAppBar(
             navigationIcon = {
                 if (null == navigationIcon) {
                     IconButton(
-                        onClick = {
-                            executeOnBackPressed(context)
-                        }) {
+                        onClick = { executeOnBackPressed(context) }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                             contentDescription = "Back_icon",
