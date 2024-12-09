@@ -7,6 +7,7 @@ import android.content.Context
 import com.riders.thelab.core.data.local.model.app.App
 import com.riders.thelab.core.data.local.model.app.LocalApp
 import com.riders.thelab.core.data.remote.dto.weather.City
+import com.riders.thelab.core.ui.utils.getDrawableByName
 import kotlinx.serialization.json.Json
 import timber.log.Timber
 
@@ -24,7 +25,8 @@ object LabParser {
                     localApp.id,
                     localApp.title!!,
                     localApp.description!!,
-                    LocalApp.getDrawableByName(context, localApp.icon!!),
+//                    LocalApp.getDrawableByName(context, localApp.icon!!),
+                    context.getDrawableByName(localApp.icon!!),
                     localApp.activity,
                     localApp.date!!
                 )

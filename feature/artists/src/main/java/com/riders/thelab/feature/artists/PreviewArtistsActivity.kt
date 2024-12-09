@@ -1,6 +1,7 @@
 package com.riders.thelab.feature.artists
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.Arrangement
@@ -99,12 +100,14 @@ fun ArtistsContent(state: ArtistsUiState) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                TheLabTopAppBar(
-                    toolbarSize = ToolbarSize.SMALL,
-                    title = stringResource(R.string.app_name_artists),
-                    withGradientBackground = true,
-                    actions = null
-                )
+                AnimatedVisibility(visible = state !is ArtistsUiState.Success) {
+                    TheLabTopAppBar(
+                        toolbarSize = ToolbarSize.SMALL,
+                        title = stringResource(R.string.app_name_artists),
+                        withGradientBackground = true,
+                        actions = null
+                    )
+                }
             }
         ) { contentPadding ->
             AnimatedContent(

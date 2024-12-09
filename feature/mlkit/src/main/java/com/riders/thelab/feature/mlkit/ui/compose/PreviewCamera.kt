@@ -43,7 +43,7 @@ fun CameraView(modifier: Modifier) {
                 val preview = Preview.Builder()
                     .build()
                     .also {
-                        it.setSurfaceProvider(previewView.surfaceProvider)
+                        it.surfaceProvider = previewView.surfaceProvider
                     }
 
                 val imageCapture = ImageCapture.Builder().build()

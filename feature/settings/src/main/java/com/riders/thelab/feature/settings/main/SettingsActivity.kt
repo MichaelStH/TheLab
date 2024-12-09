@@ -13,7 +13,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.riders.thelab.core.ui.compose.base.BaseComponentActivity
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.riders.thelab.core.google.BaseGoogleActivity
+import com.riders.thelab.core.google.GoogleSignInManager
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
 import com.riders.thelab.feature.settings.profile.UserProfileActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,13 +23,15 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class SettingsActivity : BaseComponentActivity() {
+class SettingsActivity : BaseGoogleActivity() {
 
     private val mViewModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate()")
+
+        mViewModel.intWeakReference(this@SettingsActivity)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -64,6 +68,7 @@ class SettingsActivity : BaseComponentActivity() {
 
         mViewModel.retrieveAppVersion(this@SettingsActivity)
         mViewModel.fetchDeviceInformation()
+        mViewModel.getLoggedUser()
     }
 
     override fun backPressed() {
@@ -73,4 +78,20 @@ class SettingsActivity : BaseComponentActivity() {
 
     fun launchEditProfileActivity() =
         Intent(this, UserProfileActivity::class.java).run { startActivity(this) }
+
+    fun signOut() {
+        GoogleSignInManager.getInstance(this)
+            .signOut(
+                activity = this,
+                onSuccess = { loggedOut -> Timber.i("signOut() | loggedOut: $loggedOut") },
+                onFailure = { throwable -> Timber.e("signOut() | throwable: $throwable") }
+            )
+    }
+
+    override fun onConnected(account: GoogleSignInAccount) {
+    }
+
+    override fun onDisconnected() {
+        Timber.e("onDisconnected()")
+    }
 }

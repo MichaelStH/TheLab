@@ -244,9 +244,7 @@ fun RememberUser(
                         enabled = true,
                         onClick = {
                             uiEvent.invoke(
-                                UiEvent.OnUpdateIsRememberCredentials(
-                                    isRememberCredentialsChecked
-                                )
+                                UiEvent.OnUpdateIsRememberCredentials(!isRememberCredentialsChecked)
                             )
                         }),
                 text = stringResource(id = R.string.remember_me),
@@ -462,7 +460,12 @@ fun PreviewPassword(@PreviewParameter(PreviewProviderPasswordFieldsUIState::clas
 @DevicePreviews
 @Composable
 fun PreviewRememberUser() {
-    TheLabTheme { RememberUser(modifier = Modifier, isRememberCredentialsChecked = true) {} }
+    TheLabTheme {
+        RememberUser(
+            modifier = Modifier.height(56.dp),
+            isRememberCredentialsChecked = true
+        ) {}
+    }
 }
 
 @DevicePreviews

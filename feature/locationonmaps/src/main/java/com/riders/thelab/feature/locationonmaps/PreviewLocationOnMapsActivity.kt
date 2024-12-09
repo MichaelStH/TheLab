@@ -142,7 +142,7 @@ fun LocationOnMapsContent(
 
                 DisappearingScaleBar(
                     modifier = Modifier
-                        .zIndex(1f)
+                        .zIndex(2f)
                         .statusBarsPadding()
                         .padding(top = 16.dp, start = 16.dp)
                         .align(Alignment.TopStart),
@@ -173,7 +173,9 @@ fun LocationOnMapsContent(
                         uiEvent = {
                             when (it) {
                                 is UiEvent.OnPlaceSelected -> {
+                                    @Suppress("DEPRECATION")
                                     markerTitle = it.place.name?.ifBlank { null }
+                                    @Suppress("DEPRECATION")
                                     markerSnippet = it.place.name?.ifBlank { null }
                                 }
 

@@ -146,11 +146,11 @@ class GoogleSignInManager(private val activity: BaseGoogleActivity) : GoogleKeyV
                 Timber.d("signIn() | credential: $it")
             }
 
-            GoogleIdTokenCredential.createFrom(credential.data).also {
-                mLastGoogleAccountCredential = it
+            GoogleIdTokenCredential.createFrom(credential.data).also { tokenCredential ->
+                mLastGoogleAccountCredential = tokenCredential
 
                 onAccountFetched(
-                    it.toGoogleAccountModel()
+                    tokenCredential.toGoogleAccountModel()
                         .also { Timber.d("signIn() | account: $it") }
                 )
             }

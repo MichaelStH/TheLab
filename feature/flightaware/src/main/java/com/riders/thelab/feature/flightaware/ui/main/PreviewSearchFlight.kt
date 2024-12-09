@@ -525,7 +525,8 @@ private fun PreviewSearchFlightByDestination() {
 @Composable
 private fun PreviewSearchFlightContent() {
     TheLabTheme {
-        SearchFlightContent(uiEvent = {}, 0,
+        SearchFlightContent(
+            uiEvent = {}, 0,
             onOutsideBoundariesClicked = false,
             departureExpanded = false,
             departureSuggestions = emptyList(),
@@ -539,6 +540,14 @@ private fun PreviewSearchFlightContent() {
 @Composable
 private fun PreviewSearchFlightContentPage() {
     TheLabTheme {
-        SearchFlightContent(uiEvent = {}, 1, false, false, emptyList(), false, emptyList())
+        SearchFlightContent(
+            searchPageIndex = 1,
+            onOutsideBoundariesClicked = false,
+            departureExpanded = false,
+            departureSuggestions = emptyList(),
+            arrivalExpanded = false,
+            arrivalSuggestions = emptyList(),
+            uiEvent = {}
+        )
     }
 }

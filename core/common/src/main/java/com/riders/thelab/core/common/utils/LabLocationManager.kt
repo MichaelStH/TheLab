@@ -63,7 +63,8 @@ class LabLocationManager(val context: Context) : LocationListener {
     private var _locationState: MutableStateFlow<Location?> = MutableStateFlow(null)
     val locationState: StateFlow<Location?> = _locationState
 
-    private fun updateLocationState(location: Location?) {
+     fun updateLocationState(location: Location?) {
+        Timber.d("updateLocationState() | location: $location")
         this._locationState.value = location
     }
 
@@ -324,21 +325,16 @@ class LabLocationManager(val context: Context) : LocationListener {
         @SuppressLint("StaticFieldLeak")
         private var mInstance: LabLocationManager? = null
 
-        fun getInstance(activity: Activity): LabLocationManager {
-            if (null == mInstance) {
-                mInstance = LabLocationManager(activity)
+        fun getInstance(activity: Activity): LabLocationManager =
+            mInstance ?: LabLocationManager(activity).also {
+                mInstance = it
             }
-            return mInstance as LabLocationManager
-        }
 
         fun getInstance(
             activity: Activity,
             locationListener: LocationListener
-        ): LabLocationManager {
-            if (null == mInstance) {
-                mInstance = LabLocationManager(activity, locationListener)
-            }
-            return mInstance as LabLocationManager
+        ): LabLocationManager = mInstance ?: LabLocationManager(activity, locationListener).also {
+            mInstance = it
         }
     }
 }

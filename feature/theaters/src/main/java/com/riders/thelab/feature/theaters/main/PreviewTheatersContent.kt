@@ -8,6 +8,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -108,16 +110,15 @@ fun TheatersContent(
                     navigationIconColor = Color.White
                 ) {}
             }
-        ) {
-
+        ) { /*paddingContent ->*/
             AnimatedContent(
+                // modifier = Modifier.fillMaxSize().padding(paddingContent),
                 targetState = networkState,
                 transitionSpec = { transitionSpec() },
                 label = "network state animation"
             ) { targetState: NetworkState ->
                 when (targetState) {
                     is NetworkState.Available -> {
-
                         Box(
                             modifier = Modifier.pullRefresh(
                                 state = pullRefreshState,
@@ -127,7 +128,9 @@ fun TheatersContent(
                             LabHorizontalViewPagerGeneric(
                                 pagerState = pagerState,
                                 items = categories,
-                                onCurrentPageChanged = {}
+                                onCurrentPageChanged = { index ->
+                                    uiEvent.invoke(UiEvent.OnUpdateTabRowSelected(index))
+                                }
                             ) { page, _ ->
 
                                 when (page) {
@@ -182,6 +185,7 @@ fun TheatersContent(
             uiEvent.invoke(UiEvent.OnPullToRefresh(isRefreshing))
         }
     }
+
 }
 
 

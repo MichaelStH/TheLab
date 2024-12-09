@@ -156,42 +156,45 @@ fun UserSection(
     uiEvent: (UiEvent) -> Unit
 ) {
     TheLabTheme {
-        AnimatedContent(
-            targetState = userUiState,
-            label = "content_transition",
-        ) { targetState ->
 
-            when (targetState) {
-                is UserUiState.Loading -> {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        CircularProgressIndicator()
-                        Text(text = "Fetching device's data. Please wait...")
-                    }
-                }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(start = 24.dp),
+                text = "User",
+                style = Typography.titleMedium
+            )
 
-                is UserUiState.Error -> {}
-                is UserUiState.Success -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(start = 24.dp),
-                            text = "User",
-                            style = Typography.titleMedium
-                        )
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            ) {
+                AnimatedContent(
+                    targetState = userUiState,
+                    label = "content_transition",
+                    contentAlignment = Alignment.Center
+                ) { targetState ->
+                    when (targetState) {
+                        is UserUiState.Loading -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                CircularProgressIndicator()
+                                Text(text = "Fetching user's data. Please wait...")
+                            }
+                        }
 
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                        ) {
+                        is UserUiState.Error -> {}
+                        is UserUiState.Success -> {
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.Center
@@ -218,6 +221,18 @@ fun UserSection(
                                         )
                                     }
                                 }
+                            }
+                        }
+
+                        is UserUiState.NotConnected -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.Start,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "No account connected")
                             }
                         }
                     }

@@ -25,5 +25,6 @@ class PreviewProviderUserUiState : PreviewParameterProvider<UserUiState> {
             UserUiState.Loading,
             UserUiState.Error(NotBlankString.create("Error occurred while getting value")),
             UserUiState.Success(user = User.mockUserForTests[0]),
+            UserUiState.NotConnected
         )
 }
