@@ -70,8 +70,6 @@ import com.riders.thelab.core.ui.compose.utils.getGlideImage
 import com.riders.thelab.feature.googledrive.R
 import com.riders.thelab.feature.googledrive.data.local.compose.GoogleDriveUiState
 import com.riders.thelab.feature.googledrive.data.local.compose.GoogleSignInState
-import com.skydoves.landscapist.glide.GlideImageState
-import com.skydoves.landscapist.glide.rememberGlideImageState
 import kotools.types.experimental.ExperimentalKotoolsTypesApi
 import timber.log.Timber
 
@@ -212,32 +210,32 @@ fun GoogleDriveImage(fileId: String) {
 //    val imageUrl =    "${Constants.BASE_ENDPOINT_GOOGLE_DRIVE_VIEW}${file.id}"
 
     TheLabTheme {
-      /*  val driveFilePainter = getCoilAsyncImagePainter(
-            context,
-            dataUrl = imageUrl,
-            isSvg = false,
-            onState = { state ->
-                when (state) {
-                    AsyncImagePainter.State.Empty -> {
-                        Timber.i("state is AsyncImagePainter.State.Empty")
-                    }
+        /*  val driveFilePainter = getCoilAsyncImagePainter(
+              context,
+              dataUrl = imageUrl,
+              isSvg = false,
+              onState = { state ->
+                  when (state) {
+                      AsyncImagePainter.State.Empty -> {
+                          Timber.i("state is AsyncImagePainter.State.Empty")
+                      }
 
-                    is AsyncImagePainter.State.Error -> {
-                        Timber.e("state is AsyncImagePainter.State.Error | ${state.result.throwable.message}")
-                    }
+                      is AsyncImagePainter.State.Error -> {
+                          Timber.e("state is AsyncImagePainter.State.Error | ${state.result.throwable.message}")
+                      }
 
-                    is AsyncImagePainter.State.Loading -> {
-//                        Timber.i("state is AsyncImagePainter.State.Loading")
-                    }
+                      is AsyncImagePainter.State.Loading -> {
+  //                        Timber.i("state is AsyncImagePainter.State.Loading")
+                      }
 
-                    is AsyncImagePainter.State.Success -> {
-//                        Timber.d("state is AsyncImagePainter.State.Success")
-                    }
-                }
-            }
-        )
+                      is AsyncImagePainter.State.Success -> {
+  //                        Timber.d("state is AsyncImagePainter.State.Success")
+                      }
+                  }
+              }
+          )
 
-        val u = rememberGlideImageState(initialState = GlideImageState.None)*/
+          val u = rememberGlideImageState(initialState = GlideImageState.None)*/
 
         getGlideImage(
             modifier = Modifier

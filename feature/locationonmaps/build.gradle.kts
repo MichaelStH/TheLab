@@ -38,6 +38,10 @@ dependencies {
     implementation(libs.maps.compose.widgets)
     implementation(libs.maps.utils)
 
+    // Location & Places
+    implementation(libs.location)
+    implementation(libs.places)
+
     /* Hilt - We are going to use hilt.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */

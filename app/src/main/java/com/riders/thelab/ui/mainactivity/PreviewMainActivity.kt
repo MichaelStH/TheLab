@@ -61,7 +61,6 @@ import com.riders.thelab.utils.LabAppManager
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainContent(
     viewModel: MainActivityViewModel,
