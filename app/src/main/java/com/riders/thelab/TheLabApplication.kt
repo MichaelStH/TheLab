@@ -140,7 +140,7 @@ class TheLabApplication : MultiDexApplication(), LifecycleEventObserver, Configu
         // Firebase Crashlytics
         FirebaseApp.initializeApp(this@TheLabApplication)
         Firebase.crashlytics.apply {
-            setCrashlyticsCollectionEnabled(true)
+            isCrashlyticsCollectionEnabled = true
             setUserId("wayne")
         }
 

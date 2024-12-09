@@ -63,7 +63,7 @@ class WeatherWidgetWorker @AssistedInject constructor(
                 Result.failure(outputData!!)
             } else {
                 val oneCallWeatherResponse: OneCallWeatherResponse? =
-                    runBlocking { mRepository.getWeatherOneCallAPI(location) }
+                    mRepository.getWeatherOneCallAPI(location)
 
                 // Check if response is null
                 if (null == oneCallWeatherResponse) {

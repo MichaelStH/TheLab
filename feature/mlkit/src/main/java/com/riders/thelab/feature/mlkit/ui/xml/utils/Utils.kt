@@ -76,7 +76,7 @@ object Utils {
                 PackageManager.GET_PERMISSIONS
             )
             val ps = info.requestedPermissions
-            if (ps != null && ps.isNotEmpty()) ps else arrayOf()
+            if (!ps.isNullOrEmpty()) ps else arrayOf()
         } catch (e: Exception) {
             arrayOf()
         }

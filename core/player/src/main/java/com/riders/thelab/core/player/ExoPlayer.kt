@@ -105,11 +105,13 @@ fun ExoPlayer(
                     super.onIsPlayingChanged(isPlaying)
                     if (isPlaying) {
                         // Active playback.
+                        Timber.d("onIsPlayingChanged() | Active playback")
                     } else {
                         // Not playing because playback is paused, ended, suppressed, or the player
                         // is buffering, stopped or failed. Check player.playWhenReady,
                         // player.playbackState, player.playbackSuppressionReason and
                         // player.playerError for details.
+                        Timber.e("onIsPlayingChanged() | Not playing because playback is paused, ended, suppressed, or the player")
                     }
                 }
 
@@ -228,11 +230,13 @@ fun ExoPlayer(modifier: Modifier = Modifier, uri: Uri) {
                     super.onIsPlayingChanged(isPlaying)
                     if (isPlaying) {
                         // Active playback.
+                        Timber.d("onIsPlayingChanged() | Active playback")
                     } else {
                         // Not playing because playback is paused, ended, suppressed, or the player
                         // is buffering, stopped or failed. Check player.playWhenReady,
                         // player.playbackState, player.playbackSuppressionReason and
                         // player.playerError for details.
+                        Timber.e("onIsPlayingChanged() | Not playing because playback is paused, ended, suppressed, or the player")
                     }
                 }
 

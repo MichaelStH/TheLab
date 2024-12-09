@@ -2,7 +2,7 @@ package com.riders.thelab.core.data.local.model.weather
 
 
 import com.riders.thelab.core.data.remote.dto.weather.City
-import com.squareup.moshi.FromJson
+//import com.squareup.moshi.FromJson
 
 /**
  * Moshi implementation (Gson library replacement)
@@ -14,7 +14,7 @@ import com.squareup.moshi.FromJson
  */
 class CitiesEventJsonAdapter {
 
-    @FromJson
+    //@FromJson
     fun citiesFromJson(citiesEventJson: List<City>): List<City> {
         return citiesEventJson
     }

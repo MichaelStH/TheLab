@@ -28,7 +28,6 @@ import com.riders.thelab.core.data.remote.dto.spotify.SpotifyToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -84,11 +83,9 @@ class ACRCloudViewModel @Inject constructor(
 
     var result: String? by mutableStateOf(null)
         private set
-    private var spotifyToken: String? by mutableStateOf(null)
-        private set
 
+    private var spotifyToken: String? by mutableStateOf(null)
     private var showToastWithMessage: Pair<Boolean, String> by mutableStateOf(Pair(false, ""))
-        private set
 
     private fun updateUiState(newState: ACRUiState) {
         this._uiState.value = newState
@@ -380,7 +377,7 @@ class ACRCloudViewModel @Inject constructor(
     private fun getSpotifyToken() {
         Timber.d("getSpotifyToken()")
 
-        viewModelScope.launch(IO + SupervisorJob() + coroutineExceptionHandler) {
+        viewModelScope.launch(Dispatchers.IO + SupervisorJob() + coroutineExceptionHandler) {
             // val mockToken = "BQD0Raowk2EjeF41DxIA4On2pkY67QH1t63CZseyUT8HMEeC2JwkmfJYOKt0P3z2jEzOMNeXPf2L_IHBt-H4ib-4ZZB0WY271fAeyN9a98cb38BobLY"
             val token = runCatching {
                 repository.getToken(
@@ -412,7 +409,7 @@ class ACRCloudViewModel @Inject constructor(
     private fun getInfoFromSpotify(song: Song, trackID: String) {
         Timber.d("getInfoFromSpotify()")
 
-        viewModelScope.launch(IO + SupervisorJob() + coroutineExceptionHandler) {
+        viewModelScope.launch(Dispatchers.IO + SupervisorJob() + coroutineExceptionHandler) {
             runCatching {
                 if (SpotifyToken.bearerToken.isNotBlank()) {
                     val trackInfo: SpotifyResponse = repository.getTrackInfo(

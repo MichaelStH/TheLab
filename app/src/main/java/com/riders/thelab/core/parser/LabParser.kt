@@ -1,16 +1,14 @@
 package com.riders.thelab.core.parser
 
+/*import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types*/
 import android.content.Context
 import com.riders.thelab.core.data.local.model.app.App
 import com.riders.thelab.core.data.local.model.app.LocalApp
-import com.riders.thelab.core.data.local.model.weather.CitiesEventJsonAdapter
 import com.riders.thelab.core.data.remote.dto.weather.City
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import kotlinx.serialization.json.Json
 import timber.log.Timber
-import java.lang.reflect.Type
 
 object LabParser {
 
@@ -94,7 +92,7 @@ object LabParser {
     }
 
 
-    fun parseJsonFileListWithMoshi(jsonToParse: String): List<City>? {
+    /*fun parseJsonFileListWithMoshi(jsonToParse: String): List<City>? {
         return try {
             Timber.d("Build Moshi adapter and build object...")
             // Step 2 convert to class object
@@ -108,5 +106,5 @@ object LabParser {
             e.printStackTrace()
             null
         }
-    }
+    }*/
 }

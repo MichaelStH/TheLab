@@ -120,15 +120,15 @@ class LoginViewModel @Inject constructor(private val repository: IRepository) : 
         this.hasInternetConnection = hasInternet
     }
 
-    fun updateLogin(value: String) {
+    private fun updateLogin(value: String) {
         login = value
     }
 
-    fun updatePassword(value: String) {
+    private fun updatePassword(value: String) {
         password = value
     }
 
-    fun updateIsRememberCredentials(remember: Boolean) {
+    private fun updateIsRememberCredentials(remember: Boolean) {
         this.isRememberCredentials = remember
 
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {

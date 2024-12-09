@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -41,6 +42,7 @@ class SettingsViewModel @Inject constructor(
     //////////////////////////////////////////
     // Variables
     //////////////////////////////////////////
+    private var mWeakReference: WeakReference<SettingsActivity>? = null
     val themeOptions: List<String> = listOf("Light", "Dark", "Use System")
 
     //////////////////////////////////////////
@@ -103,7 +105,7 @@ class SettingsViewModel @Inject constructor(
             updateActivitiesSplashEnabled(it)
         }
 
-        getLoggedUser()
+
     }
 
 
@@ -112,6 +114,12 @@ class SettingsViewModel @Inject constructor(
     // CLASS METHODS
     //
     //////////////////////////////////////////
+    fun intWeakReference(activity: SettingsActivity) {
+        if (null == mWeakReference) {
+            mWeakReference = WeakReference(activity)
+        }
+    }
+
     fun onEvent(event: UiEvent) {
         Timber.d("onEvent() | event: $event")
 
@@ -167,20 +175,36 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun getLoggedUser() {
-        Timber.d("getLoggedUser()")
-
+    fun getLoggedUser() {
         val user: User? =
             runBlocking(coroutineContext + SupervisorJob() + coroutineExceptionHandler) {
-                repository.getUsersSync().firstOrNull { it.logged }
+                repository.getUsersSync().firstOrNull { it.logged }?.also {
+                    Timber.d("getLoggedUser() | user: $it")
+                }
             }
-        user?.let { updateUserUiState(UserUiState.Success(it)) }
+        user?.let {
+            updateUserUiState(UserUiState.Success(it))
+        } ?: run {
+            updateUserUiState(UserUiState.NotConnected)
+        }
     }
 
     private fun logout() {
+        Timber.e("logout()")
+
         viewModelScope.launch(coroutineContext + coroutineExceptionHandler) {
             repository.getUsersSync().firstOrNull { it.logged }?.let {
+                Timber.e("repository.getUsersSync() | user: $it")
+                if (it.isGoogleAuth) {
+                    it.isGoogleAuth = false
+
+                    mWeakReference?.get()?.signOut()
+                }
+
                 repository.logoutUser(it._id.toInt())
+                updateUserUiState(UserUiState.NotConnected)
+            } ?: run {
+                Timber.e("repository.getUsersSync() | user is null")
             }
         }
     }

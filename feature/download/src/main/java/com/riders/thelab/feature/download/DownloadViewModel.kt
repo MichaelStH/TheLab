@@ -269,13 +269,14 @@ class DownloadViewModel @Inject constructor(
             var progress: Int
 
             while (!finishDownload) {
-                val cursor: Cursor = repository
+                val downloadManagerQueryCursor: Cursor = repository
                     .getDownloadManager(context)
                     .query(DownloadManager.Query().setFilterById(reference))
 
-                cursor.use {
-                    if (it.moveToFirst()) {
-                        val status = it.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+                downloadManagerQueryCursor.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val status =
+                            cursor.getInt(downloadManagerQueryCursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
 
                         when (status) {
                             DownloadManager.STATUS_FAILED -> {
@@ -309,10 +310,18 @@ class DownloadViewModel @Inject constructor(
                             DownloadManager.STATUS_RUNNING -> {
                                 // Timber.d("DownloadManager.STATUS_RUNNING")
                                 val total =
-                                    cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                                    downloadManagerQueryCursor.getLong(
+                                        downloadManagerQueryCursor.getColumnIndex(
+                                            DownloadManager.COLUMN_TOTAL_SIZE_BYTES
+                                        )
+                                    )
                                 if (total >= 0) {
                                     val downloaded =
-                                        cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                                        downloadManagerQueryCursor.getLong(
+                                            downloadManagerQueryCursor.getColumnIndex(
+                                                DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR
+                                            )
+                                        )
                                     progress = (downloaded * 100L / total).toInt()
                                     Timber.d("downloaded: $progress %")
 
