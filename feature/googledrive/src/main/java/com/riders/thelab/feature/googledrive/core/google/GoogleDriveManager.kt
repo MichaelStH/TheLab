@@ -23,6 +23,7 @@ import com.riders.thelab.feature.googledrive.base.BaseGoogleActivity
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.IOException
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -72,9 +73,7 @@ class GoogleDriveManager private constructor(private val activity: BaseGoogleAct
         )
             .setApplicationName(activity.getString(R.string.app_name))
             .build()
-            .also {
-                mDriveService = it
-            }
+            .also { mDriveService = it }
 
         return drive
     }
@@ -106,9 +105,7 @@ class GoogleDriveManager private constructor(private val activity: BaseGoogleAct
         )
             .setApplicationName(activity.getString(R.string.app_name))
             .build()
-            .also {
-                mDriveService = it
-            }
+            .also { mDriveService = it }
 
         return drive
     }
@@ -131,20 +128,20 @@ class GoogleDriveManager private constructor(private val activity: BaseGoogleAct
 
         mDriveClient?.getDriveId("My drive")
             ?.addOnFailureListener(activity) { throwable ->
-                Timber.e("task | addOnFailureListener | message: ${throwable.message} (class: ${throwable::class.java.canonicalName})")
+                Timber.e("getDrivesFoldersLegacy() | addOnFailureListener | message: ${throwable.message} (class: ${throwable::class.java.canonicalName})")
             }
             ?.addOnSuccessListener(activity) {
-                Timber.d("task | addOnSuccessListener | value: $it")
+                Timber.d("getDrivesFoldersLegacy() | addOnSuccessListener | value: $it")
             }
             ?.addOnCompleteListener(activity) { task ->
                 if (!task.isSuccessful) {
-                    Timber.e("task | addOnCompleteListener | getDrives failed")
+                    Timber.e("getDrivesFoldersLegacy() | addOnCompleteListener | getDrives failed")
                 } else {
-                    Timber.i("task | addOnCompleteListener | getDrives in successful")
+                    Timber.i("getDrivesFoldersLegacy() | addOnCompleteListener | getDrives in successful")
                     val result = task.result
 
                     if (null != result) {
-                        Timber.i("task | result: $result")
+                        Timber.i("getDrivesFoldersLegacy() | result: $result")
                     }
                 }
             }
@@ -254,6 +251,35 @@ class GoogleDriveManager private constructor(private val activity: BaseGoogleAct
                     null
                 }
         }*/
+    }
+
+    fun getFileForId(fileId:String): Task<File>? {
+        Timber.d("queryFiles()")
+
+        return mDriveService?.let { service ->
+            Tasks.forResult(
+                service.files()
+                    ?.get(fileId)
+                    ?.execute()
+            )
+        } ?: run {
+            Timber.e("queryFiles() | mDriveService is null")
+            null
+        }
+    }
+    fun getInputStreamForId(fileId:String): Task<InputStream>? {
+        Timber.d("queryFiles()")
+
+        return mDriveService?.let { service ->
+            Tasks.forResult(
+                service.files()
+                    ?.get(fileId)
+                    ?.executeMediaAsInputStream()
+            )
+        } ?: run {
+            Timber.e("queryFiles() | mDriveService is null")
+            null
+        }
     }
 
     /**

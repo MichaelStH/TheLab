@@ -83,8 +83,8 @@ class GoogleDriveActivity : BaseGoogleActivity(), OnConnectionFailedListener {
                             GoogleDriveContent(
                                 uiState = uiState,
                                 signInState = signInState,
-                                hasInternetConnection = mViewModel.isConnected,
-                                driveFileList = mViewModel.driveFileList
+                                driveFileList = mViewModel.driveFileList,
+                                hasInternetConnection = mViewModel.isConnected
                             ) { event -> mViewModel.onEvent(this@GoogleDriveActivity, event) }
                         }
                     }
@@ -122,20 +122,47 @@ class GoogleDriveActivity : BaseGoogleActivity(), OnConnectionFailedListener {
 
         lifecycleScope.launch(Dispatchers.IO) {
             runCatching {
-                GoogleDriveManager.getInstance(this@GoogleDriveActivity)
-                    .queryFiles()
+                driveManager.queryFiles()
                     ?.addOnFailureListener(this@GoogleDriveActivity) { throwable ->
-                        Timber.e("task | addOnFailureListener | message: ${throwable.message} (class: ${throwable::class.java.canonicalName})")
+                        Timber.e("onResume() | addOnFailureListener | message: ${throwable.message} (class: ${throwable::class.java.canonicalName})")
                     }
                     ?.addOnSuccessListener(this@GoogleDriveActivity) {
-                        Timber.d("task | addOnSuccessListener | value: $it")
+                        Timber.d("onResume() | addOnSuccessListener | value: $it")
                     }
                     ?.addOnCompleteListener(this@GoogleDriveActivity) { task ->
                         if (!task.isSuccessful) {
-                            Timber.e("task | addOnCompleteListener | failed")
+                            Timber.e("onResume() | addOnCompleteListener | failed")
                         } else {
-                            Timber.i("task | addOnCompleteListener | successful, result: ${task.result}")
-                            val filesList: FileList = task.result.also { Timber.d("filesList size : ${it.size}") }
+                            Timber.i("onResume() | addOnCompleteListener | successful, result: ${task.result}")
+                            val filesList: FileList =
+                                task.result.also { Timber.d("onResume() | filesList size : ${it.files.size}") }
+
+                            filesList.files.forEach { file ->
+                                file.id?.let {
+                                    lifecycleScope.launch(Dispatchers.IO) {
+                                        driveManager.getFileForId(file.id)
+                                            ?.addOnFailureListener(this@GoogleDriveActivity) { throwable ->
+                                                Timber.e("onResume() | addOnFailureListener | message: ${throwable.message} (class: ${throwable::class.java.canonicalName})")
+                                            }
+                                            ?.addOnSuccessListener(this@GoogleDriveActivity) {
+                                                Timber.d("onResume() | addOnSuccessListener | value: $it")
+                                            }
+                                            ?.addOnCompleteListener(this@GoogleDriveActivity) { task ->
+                                                if (!task.isSuccessful) {
+                                                    Timber.e("onResume() | addOnCompleteListener | failed")
+                                                } else {
+                                                    Timber.i("onResume() | addOnCompleteListener | successful, result: ${task.result}")
+                                                }
+                                            }
+                                    }
+                                } ?: run {
+                                    Timber.d("onResume() | file id is null")
+                                }
+                            }
+
+                            if (filesList.files.isNotEmpty()) {
+                                mViewModel.updateDriveFileList(filesList.files)
+                            }
                         }
                     }
             }

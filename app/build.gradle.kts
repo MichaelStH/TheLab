@@ -18,6 +18,12 @@ plugins {
     id("jacoco")
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 android {
 
     /**

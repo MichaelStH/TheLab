@@ -57,7 +57,6 @@ class GoogleDriveViewModel @Inject constructor() : BaseViewModel(), CoroutineSco
     val isConnected: Boolean by derivedStateOf { networkState.value is NetworkState.Available }
 
     var driveFileList: SnapshotStateList<File> = mutableStateListOf()
-    private set
 
     fun updateGoogleDriveUiState(newState: GoogleDriveUiState) {
         this._googleDriveUiState.value = newState
@@ -69,6 +68,13 @@ class GoogleDriveViewModel @Inject constructor() : BaseViewModel(), CoroutineSco
 
     private fun updateHasInternetConnection(hasInternet: Boolean) {
         this.hasInternetConnection = hasInternet
+    }
+
+    fun updateDriveFileList(newList: List<File>) {
+        if (driveFileList.isNotEmpty()) {
+            driveFileList.clear()
+        }
+        driveFileList.addAll(newList)
     }
 
 
