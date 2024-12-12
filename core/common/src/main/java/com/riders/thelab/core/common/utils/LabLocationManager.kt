@@ -179,14 +179,14 @@ class LabLocationManager(val context: Context) : LocationListener {
      */
     fun canGetLocation(): Boolean {
         try {
-            Timber.d("canGetLocation() | isProviderEnabled(LocationManager.GPS_PROVIDER")
+            Timber.d("canGetLocation() | isProviderEnabled(LocationManager.GPS_PROVIDER)")
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         } catch (ex: Exception) {
             ex.printStackTrace()
             Timber.e("isGPSEnabled | exception message: ${ex.message}")
         }
         try {
-            Timber.d("canGetLocation() | isProviderEnabled(LocationManager.NETWORK_PROVIDER")
+            Timber.d("canGetLocation() | isProviderEnabled(LocationManager.NETWORK_PROVIDER)")
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
         } catch (ex: Exception) {
             ex.printStackTrace()

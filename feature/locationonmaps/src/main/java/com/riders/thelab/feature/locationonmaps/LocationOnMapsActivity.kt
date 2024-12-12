@@ -29,7 +29,7 @@ class LocationOnMapsActivity : BaseComponentActivity() {
     private val mViewModel: LocationOnMapsViewModel by viewModels<LocationOnMapsViewModel>()
 
     private val mLocationManager: LabLocationManager by lazy {
-        LabLocationManager(this)
+        LabLocationManager.getInstance(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
