@@ -16,6 +16,7 @@ import com.google.common.base.Objects
 import com.riders.thelab.core.common.utils.LabCompatibilityManager
 import com.riders.thelab.core.data.local.model.Permission
 import com.riders.thelab.core.permissions.PermissionManager
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.core.ui.utils.UIManager
 import com.riders.thelab.feature.mlkit.R
 import com.riders.thelab.feature.mlkit.bean.WorkflowState
@@ -32,7 +33,7 @@ import timber.log.Timber
 import java.io.IOException
 
 /** Demonstrates the barcode scanning workflow using camera preview.  */
-class LiveBarcodeScanningActivity : AppCompatActivity(), OnClickListener {
+class LiveBarcodeScanningActivity : BaseAppCompatActivity(), OnClickListener {
 
     private var _viewBinding: ActivityLiveBarcodeBinding? = null
     private val binding get() = _viewBinding!!
@@ -94,6 +95,10 @@ class LiveBarcodeScanningActivity : AppCompatActivity(), OnClickListener {
         super.onPause()
         currentWorkflowState = WorkflowState.NOT_STARTED
         stopCameraPreview()
+    }
+
+    override fun backPressed() {
+        finish()
     }
 
     override fun onDestroy() {
@@ -224,7 +229,7 @@ class LiveBarcodeScanningActivity : AppCompatActivity(), OnClickListener {
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.close_button -> onBackPressed()
+            R.id.close_button -> backPressed()
             R.id.flash_button -> {
                 flashButton?.let {
                     if (it.isSelected) {
@@ -242,9 +247,5 @@ class LiveBarcodeScanningActivity : AppCompatActivity(), OnClickListener {
                 startActivity(Intent(this, SettingsActivity::class.java))
             }
         }
-    }
-
-    companion object {
-        private const val TAG = "LiveBarcodeActivity"
     }
 }

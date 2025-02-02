@@ -189,7 +189,7 @@ fun TransitionsComposeContent() {
                         MainScreen(
                             sharedTransitionScope = this@SharedTransitionLayout,
                             animatedVisibilityScope = this@composable,
-                            onClicked = { navController.navigate(route = "details") }
+                            onClicked = { navController.navigate(route = Screen.Detail.route.toString()) }
                         )
                     }
 

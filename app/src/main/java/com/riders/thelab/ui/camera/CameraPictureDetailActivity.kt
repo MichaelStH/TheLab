@@ -2,13 +2,13 @@ package com.riders.thelab.ui.camera
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.databinding.ActivityCameraPictureDetailBinding
 import timber.log.Timber
 import java.io.File
 
-class CameraPictureDetailActivity : AppCompatActivity() {
+class CameraPictureDetailActivity : BaseAppCompatActivity() {
 
     companion object {
         const val EXTRA_IMAGE_PATH = "extra_image_path"
@@ -40,6 +40,10 @@ class CameraPictureDetailActivity : AppCompatActivity() {
         binding.image.setImageBitmap(myBitmap)*/
 
         Glide.with(this).load(bundleImagePath).into(binding.image)
+    }
+
+    override fun backPressed() {
+        finish()
     }
 
     override fun onDestroy() {
@@ -75,7 +79,7 @@ class CameraPictureDetailActivity : AppCompatActivity() {
             } catch (exception: Exception) {
                 exception.printStackTrace()
             } finally {
-                onBackPressed()
+                backPressed()
             }
         }
 

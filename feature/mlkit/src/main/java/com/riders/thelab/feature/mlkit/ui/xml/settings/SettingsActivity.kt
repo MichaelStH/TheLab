@@ -17,12 +17,12 @@
 package com.riders.thelab.feature.mlkit.ui.xml.settings
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.feature.mlkit.R
 
 
 /** Hosts the preference fragment to configure settings.  */
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        backPressed()
         return true
+    }
+
+    override fun backPressed() {
+        finish()
     }
 }

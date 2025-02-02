@@ -10,13 +10,13 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.animation.BounceInterpolator
-import androidx.appcompat.app.AppCompatActivity
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.DynamicAnimation.ViewProperty
 import androidx.dynamicanimation.animation.FloatPropertyCompat
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import com.riders.thelab.R
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.databinding.ActivitySpringBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class SpringActivity : AppCompatActivity(), View.OnClickListener {
+class SpringActivity : BaseAppCompatActivity(), View.OnClickListener {
 
     private var _viewBinding: ActivitySpringBinding? = null
 
@@ -102,15 +102,14 @@ class SpringActivity : AppCompatActivity(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                backPressed()
             }
         }
         return true
     }
 
-
-    override fun onBackPressed() {
-        Timber.d("onBackPressed()")
+    override fun backPressed() {
+        Timber.d("backPressed()")
 
         if (isTopAnimationToggle) {
             revertTopAnimation()
@@ -124,7 +123,7 @@ class SpringActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
-        super.onBackPressed()
+        finish()
     }
 
     override fun onDestroy() {

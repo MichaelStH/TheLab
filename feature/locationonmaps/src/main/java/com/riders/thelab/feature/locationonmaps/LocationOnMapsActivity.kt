@@ -86,7 +86,7 @@ class LocationOnMapsActivity : BaseComponentActivity() {
     }
 
     override fun backPressed() {
-        Timber.e("onBackPressed()")
+        Timber.e("backPressed()")
         finish()
     }
 

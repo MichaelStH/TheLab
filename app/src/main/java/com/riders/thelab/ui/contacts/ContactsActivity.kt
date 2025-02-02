@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.riders.thelab.R
 import com.riders.thelab.core.data.local.model.Contact
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.core.ui.data.SnackBarType
 import com.riders.thelab.core.ui.utils.UIManager
 import com.riders.thelab.databinding.ActivityContactsBinding
@@ -24,7 +24,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class ContactsActivity
-    : AppCompatActivity(), ContactsClickListener, RecyclerItemTouchHelperListener {
+    : BaseAppCompatActivity(), ContactsClickListener, RecyclerItemTouchHelperListener {
 
     private var _viewBinding: ActivityContactsBinding? = null
 
@@ -100,7 +100,7 @@ class ContactsActivity
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                backPressed()
             }
 
             R.id.action_add_contact -> mContactViewModel.addNewContact(Navigator(this))
@@ -116,14 +116,14 @@ class ContactsActivity
         return true
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-
+    override fun backPressed() {
         // close search view on back button pressed
         if (!searchView?.isIconified!!) {
             searchView?.isIconified = true
             return
         }
+
+        finish()
     }
 
     override fun onDestroy() {

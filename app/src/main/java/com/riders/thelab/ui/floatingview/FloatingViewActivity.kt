@@ -11,12 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.riders.thelab.R
 import com.riders.thelab.core.common.utils.LabCompatibilityManager
 import com.riders.thelab.core.service.FloatingViewService
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.databinding.ActivityFloatingViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class FloatingViewActivity : AppCompatActivity() {
+class FloatingViewActivity : BaseAppCompatActivity() {
 
     companion object {
         private const val CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084
@@ -81,10 +82,14 @@ class FloatingViewActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                backPressed()
             }
         }
         return true
+    }
+
+    override fun backPressed() {
+        finish()
     }
 
     /**

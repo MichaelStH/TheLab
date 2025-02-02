@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.GoogleAuthException
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -29,6 +28,7 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.FileList
 import com.riders.thelab.R
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.databinding.ActivityGoogleDriveBinding
 import kotlinx.coroutines.*
 import timber.log.Timber
@@ -38,31 +38,12 @@ import kotlin.coroutines.CoroutineContext
 
 
 class GoogleDriveActivity
-    : AppCompatActivity(),
+    : BaseAppCompatActivity(),
     CoroutineScope, OnConnectionFailedListener {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + Job()
 
-    companion object {
-
-        private const val APPLICATION_NAME: String = "Google Drive API Java Quickstart"
-
-        //        private val JSON_FACTORY: JsonFactory = JacksonFactory.getDefaultInstance()
-        private val JSON_FACTORY: JsonFactory? = null
-        private const val TOKENS_DIRECTORY_PATH: String = "tokens"
-
-        /**
-         * Global instance of the scopes required by this quickstart.
-         * If modifying these scopes, delete your previously saved tokens/ folder.
-         */
-        private val SCOPES: List<String> =
-            Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY)
-        private const val CREDENTIALS_FILE_PATH: String = "/credentials.json"
-
-        private const val REQUEST_SIGN_IN = 1238
-        private const val CONST_SIGN_IN = 1236
-    }
 
     private var _viewBinding: ActivityGoogleDriveBinding? = null
 
@@ -113,6 +94,10 @@ class GoogleDriveActivity
         }
 
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun backPressed() {
+        finish()
     }
 
     override fun onStop() {
@@ -416,4 +401,23 @@ class GoogleDriveActivity
         }
     }
 
+    companion object {
+
+        private const val APPLICATION_NAME: String = "Google Drive API Java Quickstart"
+
+        //        private val JSON_FACTORY: JsonFactory = JacksonFactory.getDefaultInstance()
+        private val JSON_FACTORY: JsonFactory? = null
+        private const val TOKENS_DIRECTORY_PATH: String = "tokens"
+
+        /**
+         * Global instance of the scopes required by this quickstart.
+         * If modifying these scopes, delete your previously saved tokens/ folder.
+         */
+        private val SCOPES: List<String> =
+            Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY)
+        private const val CREDENTIALS_FILE_PATH: String = "/credentials.json"
+
+        private const val REQUEST_SIGN_IN = 1238
+        private const val CONST_SIGN_IN = 1236
+    }
 }

@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
+import com.riders.thelab.core.ui.utils.UIManager
 import com.riders.thelab.utils.Constants.GPS_REQUEST
 import timber.log.Timber
 
@@ -82,8 +83,7 @@ class GpsUtils(private val context: Context) {
                                 "Location settings are inadequate, and cannot be " +
                                         "fixed here. Fix in Settings."
                             Timber.e(errorMessage)
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG)
-                                .show()
+                            UIManager.showToast(context, errorMessage)
                         }
                     }
                 }

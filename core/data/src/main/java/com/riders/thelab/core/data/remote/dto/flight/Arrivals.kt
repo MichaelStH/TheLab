@@ -41,7 +41,7 @@ data class Arrivals(
     @SerialName("registration")
     val registration: NotBlankString? = null,
 
-    /* The ident of the flight for Air Traffic Control purposes, when known and different than ident.*/
+    /* The ident of the flight for Air Traffic Control purposes, when known and different from ident.*/
     @SerialName("atc_ident")
     val atcIdent: NotBlankString? = null,
 

@@ -203,7 +203,7 @@ fun ErrorMessage(uiState: LoginUiState) {
         color = Color.Red
     )
 
-    if (uiState is LoginUiState.UserError) {
+    // if (uiState is LoginUiState.UserError) {
         LaunchedEffect(uiState) {
             when (uiState) {
                 is LoginUiState.UserError -> {
@@ -215,7 +215,7 @@ fun ErrorMessage(uiState: LoginUiState) {
                 }
             }
         }
-    }
+    // }
 }
 
 @Composable

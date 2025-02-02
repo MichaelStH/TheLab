@@ -19,7 +19,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.ResolvableApiException
@@ -46,6 +45,7 @@ import com.riders.thelab.core.common.utils.LabLocationManager
 import com.riders.thelab.core.data.local.bean.MapsEnum
 import com.riders.thelab.core.data.local.model.Permission
 import com.riders.thelab.core.permissions.PermissionManager
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.core.ui.utils.UIManager
 import com.riders.thelab.databinding.ActivityLocationOnMapsBinding
 import kotlinx.coroutines.CoroutineScope
@@ -58,7 +58,7 @@ import java.util.Date
 import java.util.Locale
 
 class LocationOnMapsActivity
-    : AppCompatActivity(), OnMapReadyCallback, android.location.LocationListener {
+    : BaseAppCompatActivity(), OnMapReadyCallback, android.location.LocationListener {
 
     companion object {
         // location updates interval - 10sec
@@ -177,10 +177,14 @@ class LocationOnMapsActivity
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                backPressed()
             }
         }
         return true
+    }
+
+    override fun backPressed() {
+        finish()
     }
 
     override fun onDestroy() {

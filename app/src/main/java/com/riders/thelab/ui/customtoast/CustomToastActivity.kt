@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.riders.thelab.R
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.core.ui.views.toast.ToastTypeEnum
 import com.riders.thelab.databinding.ActivityCustomToastBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +21,7 @@ import timber.log.Timber
 import java.util.Random
 
 @AndroidEntryPoint
-class CustomToastActivity : AppCompatActivity() {
+class CustomToastActivity : BaseAppCompatActivity() {
 
     private var _viewBinding: ActivityCustomToastBinding? = null
     private val binding: ActivityCustomToastBinding get() = _viewBinding!!
@@ -80,10 +81,14 @@ class CustomToastActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                backPressed()
             }
         }
         return true
+    }
+
+    override fun backPressed() {
+        finish()
     }
 
     override fun onDestroy() {

@@ -167,7 +167,7 @@ class FlightMainActivity : BaseComponentActivity() {
     }
 
     override fun backPressed() {
-        Timber.e("onBackPressed()")
+        Timber.e("backPressed()")
 
         if (mViewModel.departureDropdownExpanded) {
             mViewModel.updateDepartureExpanded(false)
