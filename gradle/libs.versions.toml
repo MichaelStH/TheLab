@@ -6,7 +6,7 @@ playServicesGradlePlugin = "4.4.2"
 crashlyticsGradlePlugin = "3.0.2"
 # Performance Monitoring plugin
 performancesGradlePlugin = "1.4.2"
-navigationGradlePlugin = "2.8.5"
+navigationGradlePlugin = "2.8.6"
 
 # Dependencies version
 accompanist = "0.34.0"
@@ -18,14 +18,14 @@ androidxAutoFill = "1.1.0"
 androidxBiometric = "1.1.0"
 androidxBrowser = "1.8.0"
 # Camera
-androidxCamera = "1.4.1"
+androidxCamera = "1.5.0-alpha05"
 # Compose
-androidxComposeBom = "2025.01.00"
+androidxComposeBom = "2025.01.01"
 androidxComposeCompiler = "1.5.15"
 androidxComposeMaterial3 = "1.3.1"
 androidxComposeMaterial3Adaptative = "1.0.0"
-androidxComposeUiTooling = "1.7.6"
-androidxComposeRuntimeTracing = "1.7.6"
+androidxComposeUiTooling = "1.7.7"
+androidxComposeRuntimeTracing = "1.7.7"
 androidxCardView = "1.0.0"
 androidxConstraintLayout = "2.2.0"
 androidxConcurrent = "1.2.0"
@@ -45,7 +45,7 @@ androidxLifecycle = "2.8.7"
 androidxMacroBenchmark = "1.3.3"
 androidxMetrics = "1.0.0-beta01"
 androidxMultiDex = "2.0.1"
-androidxNavigation = "2.8.5"
+androidxNavigation = "2.8.6"
 androidxPalette = "1.0.0"
 androidxProfileinstaller = "1.4.1"
 androidxRecyclerView = "1.4.0"
@@ -65,11 +65,8 @@ androidxWindowExtensions = "1.0.0-alpha01"
 androidxWork = "2.10.0"
 blurry = "4.0.1"
 coil = "2.6.0"
-# This repository has been archived by the owner on Jul 2, 2021. It is now read-only. Dexter is not under active maintenance anymore
-# dexter = "6.2.3"
-# eventbus = "3.3.1"
 # Firebase
-firebaseBom = "33.7.0"
+firebaseBom = "33.8.0"
 firebaseAds = "23.6.0"
 # Google Api
 googleApiClient = "2.1.2"
@@ -106,7 +103,7 @@ kotlinxDatetime = "0.6.1"
 kotlinPlayServices = "1.10.1"
 kotlinxMetadataJvm = "0.4.0"
 kotlinxSerializationJson = "1.7.3"
-# KSP - Kotlin Symbol Processing (for gradle plugin version and dependency)
+# KSP - Kotlin Symbol Processing (for gradle's plugin version and dependency)
 ksp = "2.1.0-1.0.29"
 landscapist = "2.2.13"
 lint = "31.8.0"
@@ -269,10 +266,6 @@ androidx-work-testing = { group = "androidx.work", name = "work-testing", versio
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-kt-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
-# This repository has been archived by the owner on Jul 2, 2021. It is now read-only. Dexter is not under active maintenance anymore
-# dexter = { group = "com.karumi", name = "dexter", version.ref = "dexter" }
-# Eventbus - Deprecated change by kotlin bus implementation
-# eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }

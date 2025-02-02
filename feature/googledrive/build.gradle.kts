@@ -28,6 +28,13 @@ android {
         }
     }
 
+    packaging {
+        resources {
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
     namespace = "com.riders.thelab.feature.googledrive"
 }
 

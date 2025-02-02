@@ -22,16 +22,52 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.FragmentActivity
+import com.riders.thelab.core.ui.compose.base.BaseAppCompatActivity
 import com.riders.thelab.core.ui.compose.base.BaseComponentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 fun Context.findActivity(): Activity? = when (this) {
+    is BaseAppCompatActivity -> this
     is BaseComponentActivity -> this
     is AppCompatActivity -> this
+    is FragmentActivity -> this
     is ComponentActivity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
+}
+
+fun executeOnBackPressed(context: Context) {
+    Timber.d("executeOnBackPressed()")
+
+    runCatching {
+        Timber.d("runCatching | Attempt to execute backPressed on ComponentActivity()")
+        (context.findActivity() as BaseComponentActivity).backPressed()
+    }
+        .onFailure { baseComponentException ->
+            baseComponentException.printStackTrace()
+            Timber.e("runCatching | onFailure | error caught with message: ${baseComponentException.message} (class: ${baseComponentException.javaClass.canonicalName})")
+
+            runCatching {
+                Timber.d("runCatching | Attempt to execute fallback backPressed on AppCompatActivity()")
+                (context.findActivity() as BaseAppCompatActivity).backPressed()
+            }
+                .onFailure { baseAppCompatException ->
+                    baseAppCompatException.printStackTrace()
+                    Timber.e("runCatching | onFailure | error caught with message: ${baseAppCompatException.message} (class: ${baseAppCompatException.javaClass.canonicalName})")
+
+                    runCatching {
+                        Timber.d("runCatching | Attempt to execute fallback backPressed on FragmentActivity()")
+                        (context.findActivity() as FragmentActivity).onBackPressed()
+                    }
+                        .onFailure { fragmentActivityException ->
+                            fragmentActivityException.printStackTrace()
+                            Timber.e("runCatching | onFailure | error caught with message: ${fragmentActivityException.message} (class: ${fragmentActivityException.javaClass.canonicalName})")
+                        }
+                }
+        }
 }
 
 @Composable
