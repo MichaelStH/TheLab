@@ -82,11 +82,14 @@ googleBarcodeScanning = "17.3.0"
 googleGuava = "33.2.1-jre"
 googleGuavaListenableFuture = "9999.0-empty-to-avoid-conflict-with-guava"
 googleObjectDetection = "17.0.2"
+googleVisionCommon = "17.3.0"
 # Google Play Services
 googlePlayServicesBase = "18.5.0"
 googlePlayServicesAuth = "21.3.0"
 googlePlayServicesDrive = "17.0.0"
 googlePlayServicesTasks = "18.2.0"
+googlePlayServicesVision = "20.1.3"
+googlePlayServicesVisionCommon = "19.1.3"
 glide = "4.16.0"
 glideCompose = "1.0.0-beta01"
 glideTransformation = "4.3.0"
@@ -138,6 +141,7 @@ types = "4.5.1"
 youtubePlayer = "12.1.0"
 zxing = "3.5.3"
 zxingAndroid = "3.3.0"
+junitVersion = "1.2.1"
 
 
 [libraries]
@@ -282,18 +286,21 @@ google-api-client-oauth-jackson2 = { group = "com.google.api-client", name = "go
 google-api-client-oauth-java6 = { group = "com.google.oauth-client", name = "google-oauth-client-java6", version.ref = "googleApiClientOAuth" }
 google-api-client-jetty = { group = "com.google.oauth-client", name = "google-oauth-client-jetty", version.ref = "googleApiClientOAuth" }
 google-api-drive = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "googleApiDriveV3" }
+google-guava = { group = "com.google.guava", name = "guava", version.ref = "googleGuava" }
+google-guava-listenablefuture = { group = "com.google.guava", name = "listenablefuture", version.ref = "googleGuavaListenableFuture" }
 google-http-client = { group = "com.google.http-client", name = "google-http-client-android", version.ref = "googleHttpClient" }
 google-http-client-gson = { group = "com.google.http-client", name = "google-http-client-gson", version.ref = "googleHttpClientGson" }
 google-identity = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleIdentity" }
+google-mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "googleBarcodeScanning" }
+google-mlkit-objectdetection = { group = "com.google.mlkit", name = "object-detection", version.ref = "googleObjectDetection" }
+google-mlkit-objectdetection-custom = { group = "com.google.mlkit", name = "object-detection-custom", version.ref = "googleObjectDetection" }
+google-mlkit-vision-common = { group = "com.google.mlkit", name = "vision-common", version.ref = "googleVisionCommon" }
 google-play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "googlePlayServicesBase" }
 google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googlePlayServicesAuth" }
 google-play-services-drive = { group = "com.google.android.gms", name = "play-services-drive", version.ref = "googlePlayServicesDrive" }
 google-play-services-tasks = { group = "com.google.android.gms", name = "play-services-tasks", version.ref = "googlePlayServicesTasks" }
-google-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "googleBarcodeScanning" }
-google-guava = { group = "com.google.guava", name = "guava", version.ref = "googleGuava" }
-google-guava-listenablefuture = { group = "com.google.guava", name = "listenablefuture", version.ref = "googleGuavaListenableFuture" }
-google-objectdetection = { group = "com.google.mlkit", name = "object-detection", version.ref = "googleObjectDetection" }
-google-objectdetection-custom = { group = "com.google.mlkit", name = "object-detection-custom", version.ref = "googleObjectDetection" }
+google-play-services-vision = { group = "com.google.android.gms", name = "play-services-vision", version.ref = "googlePlayServicesVision" }
+google-play-services-vision-common = { group = "com.google.android.gms", name = "play-services-vision-common", version.ref = "googlePlayServicesVisionCommon" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 glide-compose = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glideCompose" }
@@ -368,6 +375,7 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 play-services-gradlePlugin = { group = "com.google.gms", name = "google-services", version.ref = "playServicesGradlePlugin" }
 firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "crashlyticsGradlePlugin" }
 firebase-performances-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "performancesGradlePlugin" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 
 
 [plugins]

@@ -36,9 +36,9 @@ dependencies {
     implementation(libs.google.guava)
     
     // ML Kit
-    implementation(libs.google.barcode.scanning)
-    implementation(libs.google.objectdetection)
-    implementation(libs.google.objectdetection.custom)
+    implementation(libs.google.mlkit.barcode.scanning)
+    implementation(libs.google.mlkit.objectdetection)
+    implementation(libs.google.mlkit.objectdetection.custom)
 
     implementation(libs.volley)
 }

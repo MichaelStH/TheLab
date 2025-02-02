@@ -237,9 +237,9 @@ dependencies {
     implementation(libs.google.api.client.oauth.jackson2)
 
     // Google ML Kit
-    implementation(libs.google.barcode.scanning)
-    implementation(libs.google.objectdetection)
-    implementation(libs.google.objectdetection.custom)
+    implementation(libs.google.mlkit.barcode.scanning)
+    implementation(libs.google.mlkit.objectdetection)
+    implementation(libs.google.mlkit.objectdetection.custom)
 
     /* Retrofit using RxJava3, Okhttp, Okhttp logging interceptor, Moshi  */
     // Retrofit: provided by data module

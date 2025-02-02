@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.riders.thelab.feature.mlkit.ui.xml.camera
+package com.riders.thelab.core.camera
 
 import android.content.Context
 import android.graphics.ImageFormat
@@ -28,7 +28,7 @@ import android.view.WindowManager
 import com.google.android.gms.common.images.Size
 import com.riders.thelab.core.ui.R
 import com.riders.thelab.feature.mlkit.ui.xml.settings.PreferenceUtils
-import com.riders.thelab.feature.mlkit.ui.xml.utils.Utils
+import com.riders.thelab.core.camera.utils.Utils
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.*
