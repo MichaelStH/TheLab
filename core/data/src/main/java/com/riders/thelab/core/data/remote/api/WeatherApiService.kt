@@ -16,9 +16,9 @@ interface WeatherApiService {
      *
      *
      * API call:
-     * api.openweathermap.org/data/2.5/weather?q={city name}&appid={your api key}
-     * api.openweathermap.org/data/2.5/weather?q={city name},{state}&appid={your api key}
-     * api.openweathermap.org/data/2.5/weather?q={city name},{state},{country code}&appid={your api key}
+     * api.openweathermap.org/data/3.0/weather?q={city name}&appid={your api key}
+     * api.openweathermap.org/data/3.0/weather?q={city name},{state}&appid={your api key}
+     * api.openweathermap.org/data/3.0/weather?q={city name},{state},{country code}&appid={your api key}
      *
      *
      * Parameters: q city name, state and country code divided by comma, use ISO 3166 country codes.
@@ -28,15 +28,15 @@ interface WeatherApiService {
      *
      *
      * Examples of API calls:
-     * api.openweathermap.org/data/2.5/weather?q=London
-     * api.openweathermap.org/data/2.5/weather?q=London,uk
+     * api.openweathermap.org/data/3.0/weather?q=London
+     * api.openweathermap.org/data/3.0/weather?q=London,uk
      *
      * @param cityName
      * @return
      */
-    /*@GET("/data/2.5/weather?")
+    /*@GET("/data/3.0/weather?")
     Call<WeatherResponse> getCurrentWeatherByCityName(@Query("q") String cityName);*/
-    @GET("/data/2.5/weather?")
+    @GET("/data/3.0/weather?")
     suspend fun getCurrentWeatherByCityName(@Query("q") cityName: String): WeatherResponse
 
     /**
@@ -47,32 +47,32 @@ interface WeatherApiService {
      *
      *
      * API call:
-     * api.openweathermap.org/data/2.5/weather?id={city id}&appid={your api key}
+     * api.openweathermap.org/data/3.0/weather?id={city id}&appid={your api key}
      *
      *
      * Parameters: id City ID
-     * Examples of API calls: api.openweathermap.org/data/2.5/weather?id=2172797
+     * Examples of API calls: api.openweathermap.org/data/3.0/weather?id=2172797
      *
      * @param cityID
      * @return
      */
-    @GET("/data/2.5/weather?")
+    @GET("/data/3.0/weather?")
     fun getCurrentWeatherByCityID(@Query("q") cityID: String): Call<Weather>
 
     /**
-     * API call: api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={your api key}
+     * API call: api.openweathermap.org/data/3.0/weather?lat={lat}&lon={lon}&appid={your api key}
      * Parameters: lat, lon coordinates of the location of your interest
-     * Examples of API calls: api.openweathermap.org/data/2.5/weather?lat=35&lon=139
+     * Examples of API calls: api.openweathermap.org/data/3.0/weather?lat=35&lon=139
      *
      * @param lat
      * @param lon
      * @return
      */
-    /*@GET("/data/2.5/weather?")
+    /*@GET("/data/3.0/weather?")
     Call<Weather> getCurrentWeatherByGeographicCoordinates(
             @Query("lat") int lat,
             @Query("lon") int lon);*/
-    @GET("/data/2.5/weather?")
+    @GET("/data/3.0/weather?")
     suspend fun getCurrentWeatherByGeographicCoordinates(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double
@@ -82,25 +82,25 @@ interface WeatherApiService {
     /**
      * Description: Please note if country is not specified then the search works for USA as a default.
      * API call:
-     * api.openweathermap.org/data/2.5/weather?zip={zip code},{country code}&appid={your api key}
-     * Examples of API calls: api.openweathermap.org/data/2.5/weather?zip=94040,us
+     * api.openweathermap.org/data/3.0/weather?zip={zip code},{country code}&appid={your api key}
+     * Examples of API calls: api.openweathermap.org/data/3.0/weather?zip=94040,us
      *
      * @param zipCodeAndCountryCode
      * @return
      */
-    @GET("/data/2.5/weather?")
+    @GET("/data/3.0/weather?")
     fun getCurrentWeatherByZipCode(@Query("zip") zipCodeAndCountryCode: String): Call<Weather>
 
     /**
-     * API call: api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&appid={your api key}
+     * API call: api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={your api key}
      * Parameters: lat, lon coordinates of the location of your interest
-     * Examples of API calls: api.openweathermap.org/data/2.5/onecall?lat=35&lon=139
+     * Examples of API calls: api.openweathermap.org/data/3.0/onecall?lat=35&lon=139
      *
      * @param lat
      * @param lon
      * @return
      */
-    @GET("/data/2.5/onecall?")
+    @GET("/data/3.0/onecall?")
     suspend fun getCurrentWeatherWithNewOneCallAPI(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double

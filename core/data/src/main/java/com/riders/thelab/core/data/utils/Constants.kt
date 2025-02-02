@@ -42,7 +42,7 @@ object Constants {
     const val BASE_ENDPOINT_GOOGLE_FIREBASE_API = "https://firebasestorage.googleapis.com/"
     const val BASE_ENDPOINT_GOOGLE_MAPS_API = "https://maps.googleapis.com/maps/api/"
     const val BASE_ENDPOINT_GOOGLE_PLACES = "https://maps.googleapis.com/maps/api/place/"
-    const val BASE_ENDPOINT_WEATHER = "http://api.openweathermap.org"
+    const val BASE_ENDPOINT_WEATHER = "https://api.openweathermap.org"
     const val BASE_ENDPOINT_WEATHER_BULK_DOWNLOAD = "http://bulk.openweathermap.org/"
     const val WEATHER_BULK_DOWNLOAD_URL = "sample/city.list.json.gz"
     const val BASE_ENDPOINT_WEATHER_ICON = "http://openweathermap.org/img/wn/"
