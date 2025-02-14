@@ -116,6 +116,14 @@
         android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
         android:minSdkVersion="34"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_LOCATION"
+        android:minSdkVersion="34"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"
+        android:minSdkVersion="34"
+        tools:ignore="ProtectedPermissions" />
 
     <!-- Required only if your app targets Android 13 or higher. -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
@@ -242,6 +250,12 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.TheLab.NoActionBar" />
+
+        <activity
+            android:name=".ui.vocalassistant.VocalAssistantActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:theme="@style/VocalAssistantTheme" />
 
         <activity
             android:name=".feature.colors.ColorActivity"
@@ -680,6 +694,11 @@
             android:name=".core.service.TheLabBootService"
             android:exported="true"
             android:foregroundServiceType="specialUse" />
+
+        <service
+            android:name=".core.service.TheLabVoiceAssistantService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
 
         <service android:name=".feature.schedule.core.ScheduleAlarmService" />
 
