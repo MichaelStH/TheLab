@@ -150,10 +150,21 @@
     <string name="more_info">More Details</string>
 
 
+    <!-- Services -->
     <string name="service_started">007</string>
     <string name="service_stopped">Service stopped</string>
     <string name="service_connected">Service is connected</string>
     <string name="service_disconnected">Service is disconnected</string>
+
+    <!-- TheLavVoiceAssistant -->
+    <string name="voice_assistant_service_trigger_phrase">Hi, The Lab</string>
+    <string name="voice_assistant_service_trigger_phrase2">The Lab</string>
+    <string name="voice_assistant_service_action_start_listening">com.riders.thelab.voice.assistant.START_LISTENING</string>
+    <string name="voice_assistant_service_action_stop_listening">com.riders.thelab.voice.assistant.STOP_LISTENING</string>
+    <string name="voice_assistant_service_notification_channel_id">972123</string>
+    <string name="voice_assistant_service_notification_channel_name">TheLabVoiceAssistantChannel</string>
+    <string name="voice_assistant_service_notification_channel_description">TheLab voice assistant service that listens to the user only for triggering the specific attached activity</string>
+    <string name="voice_assistant_service_notification_title">TheLab Voice Assistant</string>
 
 
     <string name="activity_in_vehicle">In Vehicle</string>

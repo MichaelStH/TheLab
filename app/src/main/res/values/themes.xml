@@ -248,4 +248,28 @@
             @transition/change_image_transform
         </item>
     </style>
+
+
+    <!-- Vocal Assistant Theme -->
+    <style name="VocalAssistantTheme" parent="VocalAssistantStyleTheme.Base" />
+
+    <style name="VocalAssistantStyleTheme.Base" parent="Theme.TheLab">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/swipeDownColorPrimary</item>
+        <item name="colorPrimaryDark">@color/swipeDownColorPrimaryDark</item>
+        <item name="colorAccent">@color/swipeDownColorAccent</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@transition/explode</item>
+        <item name="android:windowExitTransition">@transition/explode</item>
+    </style>
 </resources>

@@ -1,11 +1,13 @@
 package com.riders.thelab.core.common.utils
 
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
+import android.content.Intent
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -36,6 +38,21 @@ object LabNotificationManager {
                 playbackAction
             )
         ).build()
+
+
+    fun createNotificationChannel(
+        context: Context,
+        @StringRes notificationName: Int,
+        @StringRes notificationDescription: Int,
+        notificationImportance: Int,
+        @StringRes notificationChannelId: Int
+    ) = createNotificationChannel(
+        context = context,
+        notificationName = context.getString(notificationName),
+        notificationDescription = context.getString(notificationDescription),
+        notificationImportance = notificationImportance,
+        notificationChannelId = context.getString(notificationChannelId)
+    )
 
     @SuppressLint("NewApi")
     fun createNotificationChannel(
@@ -91,6 +108,32 @@ object LabNotificationManager {
                 setAutoCancel(false)
                 setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             }
+
+    fun createNotification(
+        context: Context,
+        notificationIntent: Intent,
+        stopIntent: Intent,
+        notificationChannelId: String,
+        title: String,
+        contentText: String,
+        @DrawableRes smallIcon: Int
+    ): Notification {
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        val stopPendingIntent =
+            PendingIntent.getService(context, 0, stopIntent, PendingIntent.FLAG_IMMUTABLE)
+        return NotificationCompat.Builder(context, notificationChannelId)
+            .setContentTitle(title)
+            .setContentText(contentText)
+            .setSmallIcon(smallIcon)
+            .setContentIntent(pendingIntent)
+            .addAction(0, "Stop", stopPendingIntent)
+            .build()
+    }
 
 
     @OptIn(UnstableApi::class)
