@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
+
 plugins {
     /**
      * You should use `apply false` in the top-level build.gradle file
@@ -18,6 +20,17 @@ plugins {
     id("jacoco")
 }
 
+/**
+ * Log events in console
+ *
+ * @param tag
+ * @param message
+ * @return
+ */
+fun log(tag: String, message: String) {
+    println("---> KotlinDSL script logs | $tag | $message")
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -25,7 +38,6 @@ java {
 }
 
 android {
-
     /**
      * Defined in AndroidApplicationConventionPlugin class
      */
@@ -106,7 +118,28 @@ android {
         quiet = true
     }
 
+    /*
+    * https://stackoverflow.com/questions/50792428/how-to-access-variant-outputfilename-in-kotlin
+    */
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val printFileName = "${applicationId}_${versionName}_${variant.name}.apk"
+                val fileName = "${applicationId}_$versionName.apk"
+                log("Application Variants | output", "filename: $printFileName")
+                output.outputFileName = fileName
+            }
+    }
     namespace = "com.riders.thelab"
+}
+
+composeCompiler {
+    featureFlags.addAll(
+        ComposeFeatureFlag.StrongSkipping,
+        ComposeFeatureFlag.IntrinsicRemember
+    )
 }
 
 dependencies {
@@ -261,6 +294,9 @@ dependencies {
 
     // Kotools Types: provided by data module
 
+    // Fast Fourier Transform (FFT)
+    implementation(libs.jtransforms)
+
 
     /////////////////////////////
     // Tests Dependencies
@@ -284,6 +320,24 @@ dependencies {
 // The Hilt Gradle plugin offers an option for performing Hilt’s classpath aggregation in a dedicated Gradle task.
 hilt {
     enableAggregatingTask = true
+}
+
+/*
+ * Use incremental compilation
+ */
+tasks.withType<JavaCompile>().configureEach {
+    options.isIncremental = true
+}
+
+/*
+ * Disable reports
+ * Gradle automatically creates test reports regardless of whether you want to look at them. That report generation slows down the overall build. You may not need reports if:
+ *      you only care if the tests succeeded (rather than why)
+ *      you use build scans, which provide more information than a local report
+ */
+tasks.withType<Test>().configureEach {
+    reports.html.required = false
+    reports.junitXml.required = false
 }
 
 tasks.named("build") {
