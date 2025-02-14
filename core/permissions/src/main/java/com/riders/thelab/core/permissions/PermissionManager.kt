@@ -68,6 +68,11 @@ class PermissionManager {
         return this
     }
 
+    fun request(permission: Array<Permission>): PermissionManager {
+        requiredPermissions.addAll(permission)
+        return this
+    }
+
     fun checkPermission(callback: (Boolean) -> Unit) {
         this.callback = callback
         handlePermissionRequest()

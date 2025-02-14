@@ -42,6 +42,7 @@ import com.riders.thelab.core.data.local.model.app.PackageApp
 import com.riders.thelab.core.location.GpsUtils
 import com.riders.thelab.core.location.OnGpsListener
 import com.riders.thelab.core.permissions.PermissionManager
+import com.riders.thelab.core.service.TheLabVoiceAssistantService
 import com.riders.thelab.core.ui.compose.base.BaseComponentActivity
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
 import com.riders.thelab.core.ui.utils.UIManager
@@ -226,6 +227,7 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
     private fun checkPermissions() {
         val setOfPermissions: Set<String> = buildSet {
             Permission.Location.permissions.forEach { add(it) }
+            Permission.AudioRecord.permissions.forEach { add(it) }
         }
         val arrayOfPermissions: Array<String> = setOfPermissions.toTypedArray()
 
@@ -246,19 +248,30 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
                         Timber.e("Permissions are denied. User may access to app with limited location related features")
 
                     } else {
+                        it.request(Permission.AudioRecord)
+                            .rationale("Audio Record is needed to use the vocal assistant. You can enable this feature in the settings screen")
+                            .checkPermission { granted: Boolean ->
 
-                        // Variables
-                        initActivityVariables()
+                                if (!granted) {
+                                    Timber.e("Permissions are denied. User may access to app with limited audio related features")
 
-                        // Retrieve applications
-                        mViewModel.retrieveApplications(
-                            TheLabApplication.getInstance().getContext()
-                        )
-                        mViewModel.retrieveRecentApps(TheLabApplication.getInstance().getContext())
+                                } else {
+
+                                    // Variables
+                                    initActivityVariables()
+
+                                    // Retrieve applications
+                                    mViewModel.retrieveApplications(
+                                        TheLabApplication.getInstance().getContext()
+                                    )
+                                    mViewModel.retrieveRecentApps(
+                                        TheLabApplication.getInstance().getContext()
+                                    )
+                                }
+                            }
                     }
                 }
         }
-
     }
 
     private fun initActivityVariables() {
@@ -278,6 +291,14 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
                 activity = this@MainActivity,
                 locationListener = this@MainActivity
             )*/
+        startVoiceService()
+    }
+
+    private fun startVoiceService() {
+        val serviceIntent = Intent(this, TheLabVoiceAssistantService::class.java).apply {
+            action = getString(R.string.voice_assistant_service_action_start_listening)
+        }
+        ContextCompat.startForegroundService(this, serviceIntent)
     }
 
     private fun registerLocationReceiver() {
