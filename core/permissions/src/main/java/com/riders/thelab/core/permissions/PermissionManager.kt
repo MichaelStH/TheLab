@@ -68,6 +68,7 @@ class PermissionManager {
         return this
     }
 
+    @JvmName("requestWithArray")
     fun request(permission: Array<Permission>): PermissionManager {
         requiredPermissions.addAll(permission)
         return this

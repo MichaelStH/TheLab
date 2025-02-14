@@ -19,8 +19,65 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
 
     private var speechRecognizer: SpeechRecognizer? = null
     private var speechRecognizerIntent: Intent? = null
-    private val triggerPhrase = "hi siri"
     private var isListening = false
+
+    private val recognitionListener: RecognitionListener = object : RecognitionListener {
+        override fun onReadyForSpeech(params: Bundle?) {}
+
+        override fun onBeginningOfSpeech() {}
+
+        override fun onRmsChanged(rmsdB: Float) {}
+
+        override fun onBufferReceived(buffer: ByteArray?) {}
+
+        override fun onEndOfSpeech() {}
+
+        override fun onError(error: Int) {
+            when (error) {
+                SpeechRecognizer.ERROR_AUDIO -> {
+                    Timber.e("recognitionListener.onError() | Speech recognition error: ERROR_AUDIO")
+                }
+
+                SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED -> {
+                    Timber.e("recognitionListener.onError() | Speech recognition error: ERROR_LANGUAGE_NOT_SUPPORTED")
+                }
+
+                SpeechRecognizer.ERROR_NO_MATCH -> {
+                    Timber.e("recognitionListener.onError() | Speech recognition error: ERROR_NO_MATCH")
+                }
+
+                SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> {
+                    Timber.e("recognitionListener.onError() | Speech recognition error: ERROR_INSUFFICIENT_PERMISSIONS")
+                }
+
+                else -> {
+                    Timber.e("recognitionListener.onError() | Speech recognition error: $error")
+                }
+            }
+
+            startListening() // Restart listening on error
+        }
+
+        override fun onResults(results: Bundle?) {
+            val spokenWords = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+            spokenWords?.forEach { word ->
+                if (word.contains(getString(R.string.voice_assistant_service_trigger_phrase), ignoreCase = true)) {
+                    Navigator.callVoiceAssistantActivity(this@TheLabVoiceAssistantService)
+                    stopListening() // Stop listening after launching activity
+                }
+                Timber.i("recognitionListener.onResults() | Detected words: $word")
+            }
+            startListening() // Continue listening after processing results
+        }
+
+        override fun onPartialResults(partialResults: Bundle?) {
+            val partialResults =
+                partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+            Timber.i("onPartialResults() | partial results = ${partialResults?.joinToString(",")}")
+        }
+
+        override fun onEvent(eventType: Int, params: Bundle?) {}
+    }
 
 
     ///////////////////////////////
@@ -38,7 +95,7 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
 
         createNotificationChannel()
 
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this@TheLabVoiceAssistantService)
         speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -46,7 +103,7 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
             )
             putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, packageName)
         }
-        speechRecognizer?.setRecognitionListener(this)
+        speechRecognizer?.setRecognitionListener(recognitionListener)
     }
 
     @SuppressLint("NewApi")
@@ -59,8 +116,14 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
                     getString(R.string.voice_assistant_service_notification_channel_id).toInt(),
                     LabNotificationManager.createNotification(
                         context = baseContext,
-                        notificationIntent = Intent(this, MainActivity::class.java),
-                        stopIntent = Intent(this, TheLabVoiceAssistantService::class.java).apply {
+                        notificationIntent = Intent(
+                            this@TheLabVoiceAssistantService,
+                            MainActivity::class.java
+                        ),
+                        stopIntent = Intent(
+                            this@TheLabVoiceAssistantService,
+                            TheLabVoiceAssistantService::class.java
+                        ).apply {
                             action =
                                 getString(R.string.voice_assistant_service_action_stop_listening)
                         },
@@ -103,14 +166,16 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
     }
 
     private fun startListening() {
+        Timber.i("startListening()")
         if (!isListening && SpeechRecognizer.isRecognitionAvailable(this)) {
             speechRecognizer?.startListening(speechRecognizerIntent)
             isListening = true
-            Timber.d("Start listening")
+            Timber.v("Start listening")
         }
     }
 
     private fun stopListening() {
+        Timber.e("stopListening()")
         if (isListening) {
             speechRecognizer?.stopListening()
             isListening = false
@@ -134,14 +199,35 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
     override fun onEndOfSpeech() {}
 
     override fun onError(error: Int) {
-        Timber.e("onError() | Speech recognition error: $error")
+        when (error) {
+            SpeechRecognizer.ERROR_AUDIO -> {
+                Timber.e("onError() | Speech recognition error: ERROR_AUDIO")
+            }
+
+            SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED -> {
+                Timber.e("onError() | Speech recognition error: ERROR_LANGUAGE_NOT_SUPPORTED")
+            }
+
+            SpeechRecognizer.ERROR_NO_MATCH -> {
+                Timber.e("onError() | Speech recognition error: ERROR_NO_MATCH")
+            }
+
+            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> {
+                Timber.e("onError() | Speech recognition error: ERROR_INSUFFICIENT_PERMISSIONS")
+            }
+
+            else -> {
+                Timber.e("onError() | Speech recognition error: $error")
+            }
+        }
+
         startListening() // Restart listening on error
     }
 
     override fun onResults(results: Bundle?) {
         val spokenWords = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
         spokenWords?.forEach { word ->
-            if (word.contains(triggerPhrase, ignoreCase = true)) {
+            if (word.contains(getString(R.string.voice_assistant_service_trigger_phrase), ignoreCase = true)) {
                 Navigator.callVoiceAssistantActivity(this)
                 stopListening() // Stop listening after launching activity
             }

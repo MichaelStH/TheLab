@@ -88,14 +88,15 @@ class Navigator(private val activity: Activity) {
     fun callIntentForPackageActivity(intentPackageName: String) {
         activity.startActivity(activity.packageManager.getLaunchIntentForPackage(intentPackageName))
     }
-companion object {
 
-    fun callVoiceAssistantActivity(context: Context) {
-        val intent = Intent(context, VocalAssistantActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    companion object {
+
+        fun callVoiceAssistantActivity(context: Context) {
+            val intent = Intent(context, VocalAssistantActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
         }
-        context.startActivity(intent)
     }
-}
 
 }

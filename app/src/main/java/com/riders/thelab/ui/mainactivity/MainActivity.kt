@@ -267,6 +267,8 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
                                     mViewModel.retrieveRecentApps(
                                         TheLabApplication.getInstance().getContext()
                                     )
+
+                                    startVoiceService()
                                 }
                             }
                     }
@@ -291,7 +293,6 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
                 activity = this@MainActivity,
                 locationListener = this@MainActivity
             )*/
-        startVoiceService()
     }
 
     private fun startVoiceService() {
@@ -374,10 +375,10 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
             }
     }
 
-    // Init Speech To Text Variables
     private fun initSpeechToText() {
         Timber.i("initSpeechToText()")
 
+        // Init Speech To Text Variables
         speech = SpeechRecognizer.createSpeechRecognizer(this).apply {
             setRecognitionListener(this@MainActivity)
         }
