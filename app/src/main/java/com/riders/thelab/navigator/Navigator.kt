@@ -90,7 +90,6 @@ class Navigator(private val activity: Activity) {
     }
 
     companion object {
-
         fun callVoiceAssistantActivity(context: Context) {
             val intent = Intent(context, VocalAssistantActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -98,5 +97,4 @@ class Navigator(private val activity: Activity) {
             context.startActivity(intent)
         }
     }
-
 }

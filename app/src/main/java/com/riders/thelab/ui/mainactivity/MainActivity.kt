@@ -15,7 +15,6 @@ import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.provider.Settings
 import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -43,6 +42,8 @@ import com.riders.thelab.core.location.GpsUtils
 import com.riders.thelab.core.location.OnGpsListener
 import com.riders.thelab.core.permissions.PermissionManager
 import com.riders.thelab.core.service.TheLabVoiceAssistantService
+import com.riders.thelab.core.speechtotext.SpeechRecognizerError
+import com.riders.thelab.core.speechtotext.SpeechToTextManager
 import com.riders.thelab.core.ui.compose.base.BaseComponentActivity
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
 import com.riders.thelab.core.ui.utils.UIManager
@@ -50,7 +51,6 @@ import com.riders.thelab.ui.mainactivity.fragment.exit.ExitDialog
 import com.riders.thelab.utils.Constants.GPS_REQUEST
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.Locale
 
 
 class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, RecognitionListener {
@@ -70,8 +70,10 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
     private var mLabNetworkManager: LabNetworkManager? = null
 
     // Speech
-    private var speech: SpeechRecognizer? = null
-    private var recognizerIntent: Intent? = null
+    private var mSpeechToTextManager: SpeechToTextManager? = null
+
+    /*private var speech: SpeechRecognizer? = null
+    private var recognizerIntent: Intent? = null*/
     private var message: String? = null
 
 
@@ -213,7 +215,9 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
             Timber.e("NetworkCallback was already unregistered")
         }
 
-        if (speech != null) speech!!.stopListening()
+//        if (speech != null) speech!!.stopListening()
+        mSpeechToTextManager?.stopListening()
+
 
         super.onDestroy()
     }
@@ -233,11 +237,11 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
 
         val hasPermission = arrayOfPermissions.all {
             val granted = checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED
-            Timber.d("checkPermissions() | granted?: $granted")
+            Timber.d("checkPermissions() | permission ${it.toString()} granted ? = $granted")
             checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED
         }
 
-        Timber.d("checkPermissions() | hasPermission?: $hasPermission")
+        Timber.d("checkPermissions() | has all Permissions ?: $hasPermission")
 
         mPermissionManager?.let {
             it.request(Permission.Location)
@@ -277,8 +281,6 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
     }
 
     private fun initActivityVariables() {
-        Timber.d("initActivityVariables()")
-
         mViewModel.initNavigator(this@MainActivity)
 
         mLabNetworkManager = LabNetworkManager
@@ -353,8 +355,9 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
             "Permission Manager is null. Then cannot launch speech to text."
         }
 
-        manager.request(Permission.AudioRecord)
-            .rationale("Microphone permission is mandatory in order to use the vocal searchiing fatures.")
+        manager
+            .request(Permission.AudioRecord)
+            .rationale("Microphone permission is mandatory in order to use the vocal searching features.")
             .checkPermission { granted: Boolean ->
 
                 if (!granted) {
@@ -369,8 +372,9 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
                     initSpeechToText()
 
                     // Start listening (TTS)
-                    Timber.i("startListening() ... ")
-                    speech?.startListening(recognizerIntent)
+                    Timber.i("launchSpeechToText() | startListening() ... ")
+//                    speech?.startListening(recognizerIntent)
+                    mSpeechToTextManager?.startListening()
                 }
             }
     }
@@ -378,8 +382,13 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
     private fun initSpeechToText() {
         Timber.i("initSpeechToText()")
 
+        mSpeechToTextManager = SpeechToTextManager.Builder(this@MainActivity)
+            .setSpeechRecognizerIntent(maxResults = 3)
+            .setRecognitionListener(this)
+            .build()
+
         // Init Speech To Text Variables
-        speech = SpeechRecognizer.createSpeechRecognizer(this).apply {
+        /*speech = SpeechRecognizer.createSpeechRecognizer(this).apply {
             setRecognitionListener(this@MainActivity)
         }
 
@@ -391,7 +400,7 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
             )
             putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this@MainActivity.packageName)
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
-        }
+        }*/
     }
 
     @SuppressLint("InlinedApi")
@@ -490,36 +499,18 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
     }
 
     override fun onError(error: Int) {
-        Timber.e("FAILED %s", error)
-
-        message = when (error) {
-            SpeechRecognizer.ERROR_AUDIO -> getString(R.string.error_audio_error)
-            SpeechRecognizer.ERROR_CLIENT -> getString(R.string.error_client)
-            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> getString(R.string.error_permission)
-            SpeechRecognizer.ERROR_NETWORK -> getString(R.string.error_network)
-            SpeechRecognizer.ERROR_NETWORK_TIMEOUT, SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> getString(
-                R.string.error_timeout
-            )
-
-            SpeechRecognizer.ERROR_NO_MATCH -> getString(R.string.error_no_match)
-            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> getString(R.string.error_busy)
-            SpeechRecognizer.ERROR_SERVER -> getString(R.string.error_server)
-            else -> getString(R.string.error_understand)
-        }
-
-        Timber.e("Error message caught: $message")
+        message = this@MainActivity.getString(SpeechRecognizerError.getIntErrorAsStringRes(error))
+        Timber.e("onError() | Error message caught: $message")
 
         mViewModel.updateMicrophoneEnabled(false)
     }
 
     override fun onResults(results: Bundle?) {
-        Timber.e("onResults()")
-
         results
             ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
             ?.let { matches ->
                 for (element in matches) {
-                    Timber.d("match element found: $element")
+                    Timber.d("onResults() | match element found: $element")
                 }
 
                 // Take first result should be the most accurate word

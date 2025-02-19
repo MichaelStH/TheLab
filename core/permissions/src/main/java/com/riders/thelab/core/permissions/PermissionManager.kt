@@ -87,24 +87,26 @@ class PermissionManager {
     private fun handlePermissionRequest() {
         Timber.d("handlePermissionRequest()")
         if (null != mFragment) {
-            Timber.d("null != mFragment")
             mFragment?.get()?.let { fragment ->
                 when {
                     areAllPermissionsGranted(fragment) -> sendPositiveResult()
                     shouldShowPermissionRationale(fragment) -> displayRationale(fragment)
                     else -> requestPermissions()
                 }
+            } ?: run {
+                Timber.e("handlePermissionRequest() | mFragment object is null")
             }
         }
 
         if (null != mActivity) {
-            Timber.d("null != mActivity")
             mActivity?.get()?.let { activity ->
                 when {
                     areAllPermissionsGranted(activity) -> sendPositiveResult()
                     shouldShowPermissionRationale(activity) -> displayRationale(activity)
                     else -> requestPermissions()
                 }
+            } ?: run {
+                Timber.e("handlePermissionRequest() | mActivity object is null")
             }
         }
     }
