@@ -42,6 +42,7 @@ data class WeatherModel(
     val windDegree: Int = 0,
     val windGust: Double? = null,
 
+    val hourlyWeather: List<WeatherModel>? = null,
     val dailyWeather: List<WeatherModel>? = null,
 
     val rain: Double? = null,
@@ -50,6 +51,14 @@ data class WeatherModel(
 ) : Serializable
 
 fun OneCallWeatherResponse.toModel(): WeatherModel {
+    val hourlies = this.hourlyWeather?.map { hourlyWeatherItem ->
+        WeatherModel(
+            mainWeather = hourlyWeatherItem.weather?.get(0)?.main!!,
+            description = hourlyWeatherItem.weather?.get(0)?.description!!,
+            weatherIconUrl = hourlyWeatherItem.weather?.get(0)?.icon!!
+        )
+    }
+
     val dailies = this.dailyWeather?.map { dailyWeatherItem ->
         WeatherModel(
             mainWeather = dailyWeatherItem.weather[0].main,
@@ -63,6 +72,7 @@ fun OneCallWeatherResponse.toModel(): WeatherModel {
         longitude = this.longitude,
         dateTimeUTC = this.currentWeather?.dateTimeUTC!!,
         temperature = TemperatureModel(temperature = this.currentWeather?.temperature!!),
+        hourlyWeather = hourlies,
         dailyWeather = dailies
     )
 }
