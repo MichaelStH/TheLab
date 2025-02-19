@@ -55,6 +55,8 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
                 }
             }
 
+            isListening = false
+
             startListening() // Restart listening on error
         }
 
@@ -73,7 +75,7 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
         override fun onPartialResults(partialResults: Bundle?) {
             val partialResults =
                 partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-            Timber.i("onPartialResults() | partial results = ${partialResults?.joinToString(",")}")
+            Timber.i("recognitionListener.onPartialResults() | partial results = ${partialResults?.joinToString(",")}")
         }
 
         override fun onEvent(eventType: Int, params: Bundle?) {}
@@ -167,7 +169,7 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
 
     private fun startListening() {
         Timber.i("startListening()")
-        if (!isListening && SpeechRecognizer.isRecognitionAvailable(this)) {
+        if (!isListening /*&& SpeechRecognizer.isRecognitionAvailable(this)*/) {
             speechRecognizer?.startListening(speechRecognizerIntent)
             isListening = true
             Timber.v("Start listening")

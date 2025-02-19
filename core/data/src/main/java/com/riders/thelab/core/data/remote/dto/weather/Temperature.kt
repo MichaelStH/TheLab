@@ -24,13 +24,3 @@ data class Temperature(
     @SerialName("morn")
     val morning: Double = 0.0
 ) : Serializable
-
-fun Temperature.toTemperatureModel(): TemperatureModel =
-    TemperatureModel(
-        day = day,
-        min = min,
-        max = max,
-        night = night,
-        evening = evening,
-        morning = morning
-    )
