@@ -154,6 +154,7 @@ dependencies {
     implementation(project(":core:google"))
     implementation(project(":core:permissions"))
     implementation(project(":core:player"))
+    implementation(project(":core:speechtotext"))
     implementation(project(":core:ui"))
     implementation(project(":core:testing"))
     implementation(project(":feature:artists"))

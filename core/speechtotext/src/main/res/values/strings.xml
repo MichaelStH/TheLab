@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_audio_error">audio error</string>
+    <string name="error_client">client error</string>
+    <string name="error_permission">error permission</string>
+    <string name="error_network">network error cannot connect</string>
+    <string name="error_timeout">timeout error</string>
+    <string name="error_no_match">no match</string>
+    <string name="error_busy">busy</string>
+    <string name="error_server">server side error</string>
+    <string name="error_understand">don\'t understand</string>
+    <string name="speech_recording">Recording…</string>
+</resources>
