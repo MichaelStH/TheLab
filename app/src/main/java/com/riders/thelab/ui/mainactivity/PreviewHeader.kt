@@ -39,7 +39,6 @@ import com.riders.thelab.utils.LabAppManager
 ///////////////////////////////
 @Composable
 fun Header(
-    viewModel: MainActivityViewModel,
     whatsNewList: List<LocalApp>,
     isKeyboardVisible: Boolean,
     pagerAutoScroll: Boolean,
@@ -78,7 +77,6 @@ fun Header(
         ) {
 
             WhatsNewContent(
-                viewModel = viewModel,
                 whatsNewList = whatsNewList,
                 pagerAutoScroll = pagerAutoScroll,
                 onSearchClicked = onSearchClicked,
@@ -148,11 +146,9 @@ fun PreviewHeader() {
     }
 
     Header(
-        viewModel = MainActivityViewModel(),
         whatsNewList = appList,
         isKeyboardVisible = true,
         pagerAutoScroll = true,
-        onSearchClicked = { },
-        onSettingsClicked = {}
-    )
+        onSearchClicked = { }
+    ) {}
 }

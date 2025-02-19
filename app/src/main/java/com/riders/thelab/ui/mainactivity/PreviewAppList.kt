@@ -66,7 +66,7 @@ fun NoItemFound(searchValue: String) {
 
 
 @Composable
-fun App(item: App) {
+fun App(item: App, onAppItemClick:(App) -> Unit) {
 
     val context = LocalContext.current
 
@@ -105,7 +105,7 @@ fun App(item: App) {
             modifier = Modifier
                 .height(dimensionResource(id = R.dimen.max_card_image_height))
                 .fillMaxWidth(),
-            onClick = { (context.findActivity() as MainActivity).launchApp(item) },
+            onClick = { onAppItemClick.invoke(item) },
             // colors = CardDefaults.cardColors(containerColor = md_theme_dark_background),
             elevation = CardDefaults.cardElevation(0.dp)
         ) {
@@ -216,6 +216,6 @@ private fun PreviewApp() {
     val context = LocalContext.current
     val appItem = LabAppManager.getActivityList(context)[12]
     TheLabTheme {
-        App(appItem)
+        App(appItem) {}
     }
 }

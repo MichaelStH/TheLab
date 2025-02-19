@@ -317,7 +317,6 @@ fun WhatsNewList(
 
 @Composable
 fun WhatsNewContent(
-    viewModel: MainActivityViewModel,
     whatsNewList: List<LocalApp>,
     pagerAutoScroll: Boolean,
     onSearchClicked: () -> Unit,
@@ -338,11 +337,16 @@ fun WhatsNewContent(
             // Whats New ViewPager
             Row(modifier = Modifier.fillMaxWidth()) {
                 LabHorizontalViewPagerGeneric(
-                    viewModel = viewModel,
                     pagerState = pagerState,
                     items = whatsNewList,
+                    onCurrentPageChanged = {},
+                    pageCount = whatsNewList.size,
+                    viewPagerDotVisibility = true,
+                    updateViewPagerDotVisibility = { visible -> },
+                    viewPagerDotExpanded = false,
+                    updateViewPagerExpanded = { expanded -> },
                     autoScroll = pagerAutoScroll
-                ) { page, pageOffset ->
+                ) { page: Int, pageOffset: Float ->
                     WhatsNew(
                         item = whatsNewList[page],
                         pageOffset = pageOffset

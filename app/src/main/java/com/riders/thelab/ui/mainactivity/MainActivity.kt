@@ -115,11 +115,8 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
                             color = MaterialTheme.colorScheme.background
                         ) {
                             MainContent(
-                                viewModel = mViewModel,
                                 dynamicIslandUiState = dynamicIslandUiState,
                                 isDynamicIslandVisible = mViewModel.isDynamicIslandVisible,
-                                onUpdateDynamicIslandState = mViewModel::updateDynamicIslandState,
-                                onUpdateDynamicIslandVisible = mViewModel::updateDynamicIslandVisible,
                                 searchedAppRequest = mViewModel.searchedAppRequest,
                                 onSearchAppRequestChanged = mViewModel::updateSearchAppRequest,
                                 filteredList = mViewModel.filteredList,
@@ -128,9 +125,13 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
                                 onUpdateMicrophoneEnabled = mViewModel::updateMicrophoneEnabled,
                                 isKeyboardVisible = mViewModel.keyboardVisible,
                                 onUpdateKeyboardVisible = mViewModel::updateKeyboardVisible,
-                                isPagerAutoScroll = mViewModel.isPagerAutoScroll,
-                                onLaunchSettings = mViewModel::launchSettings
-                            )
+                                isPagerAutoScroll = mViewModel.isPagerAutoScroll
+                            ) { event ->
+                                when (event) {
+                                    is UiEvent.OnAppItemClicked -> launchApp(event.app)
+                                    else -> mViewModel.onEvent(event)
+                                }
+                            }
                         }
                     }
                 }

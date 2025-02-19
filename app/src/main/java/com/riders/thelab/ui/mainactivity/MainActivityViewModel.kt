@@ -75,8 +75,7 @@ class MainActivityViewModel : BaseViewModel() {
         MutableStateFlow(IslandState.DefaultState)
     val dynamicIslandState: StateFlow<IslandState> = _dynamicIslandState
 
-    var isDynamicIslandVisible: Boolean by mutableStateOf(false)
-        private set
+    val isDynamicIslandVisible: Boolean by derivedStateOf { _dynamicIslandState.value !is IslandState.DefaultState }
 
     // Network
     private lateinit var networkState: StateFlow<NetworkState>
@@ -143,9 +142,9 @@ class MainActivityViewModel : BaseViewModel() {
         this.isMicrophoneEnabled = isMicEnabled
     }
 
-    fun updateDynamicIslandVisible(visible: Boolean) {
+    /*fun updateDynamicIslandVisible(visible: Boolean) {
         this.isDynamicIslandVisible = visible
-    }
+    }*/
 
     fun updatePagerAutoScroll(autoScroll: Boolean) {
         this.isPagerAutoScroll = autoScroll
@@ -184,14 +183,13 @@ class MainActivityViewModel : BaseViewModel() {
     }
 
     fun observeNetworkState(networkManager: LabNetworkManager) {
-        Timber.d("observeNetworkState()")
         networkState = networkManager.networkState
 
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             networkManager.getNetworkState().collect { networkState ->
                 when (networkState) {
                     is NetworkState.Available -> {
-                        Timber.d("network state is Available. All set.")
+                        Timber.d("observeNetworkState() | network state is Available. All set.")
 
                         updateHasInternetConnection(true)
 
@@ -200,28 +198,57 @@ class MainActivityViewModel : BaseViewModel() {
                     }
 
                     is NetworkState.Losing -> {
-                        Timber.w("network state is Losing. Internet connection about to be lost")
+                        Timber.w("observeNetworkState() | network state is Losing. Internet connection about to be lost")
                         updateKeyboardVisible(true)
                         updateHasInternetConnection(false)
                     }
 
                     is NetworkState.Lost -> {
-                        Timber.e("network state is Lost. Should not allow network calls initialization")
+                        Timber.e("observeNetworkState() | network state is Lost. Should not allow network calls initialization")
                         updateKeyboardVisible(true)
                         updateHasInternetConnection(false)
                         updateDynamicIslandState(IslandState.NetworkState.Lost)
                     }
 
                     is NetworkState.Unavailable -> {
-                        Timber.e("network state is Unavailable. Should not allow network calls initialization")
+                        Timber.e("observeNetworkState() | network state is Unavailable. Should not allow network calls initialization")
                         updateHasInternetConnection(false)
                         updateDynamicIslandState(IslandState.NetworkState.Unavailable)
                     }
 
                     is NetworkState.Undefined -> {
-                        Timber.i("network state is Undefined. Do nothing")
+                        Timber.i("observeNetworkState() | network state is Undefined. Do nothing")
                     }
                 }
+            }
+        }
+    }
+
+    fun onEvent(event: UiEvent) {
+        Timber.d("onEvent() | event : $event")
+
+        when (event) {
+            is UiEvent.OnUpdateDynamicIslandState -> updateDynamicIslandState(event.newState)
+            is UiEvent.OnUpdateDynamicIslandVisible -> {
+                if (!event.isVisible) {
+                    updateDynamicIslandState(IslandState.DefaultState)
+                    return
+                }
+            }
+
+            is UiEvent.OnSearchClicked -> updateDynamicIslandState(IslandState.SearchState())
+            is UiEvent.OnUpdateSearchQuery -> updateSearchAppRequest(event.newQuery)
+
+            is UiEvent.OnMicrophoneClicked -> {}
+            is UiEvent.OnUpdateMicrophoneEnabled -> updateMicrophoneEnabled(event.enabled)
+
+            is UiEvent.OnSettingsClicked -> {
+                mNavigator?.callSettingsActivity()
+                    ?: run { Timber.e("onEvent() | navigator object is null") }
+            }
+
+            else -> {
+                Timber.e("Unknown event for $event")
             }
         }
     }
@@ -320,8 +347,6 @@ class MainActivityViewModel : BaseViewModel() {
     }
 
     fun retrieveRecentApps(context: Context) {
-        Timber.d("fetchRecentApps()")
-
         // Setup last 3 features added
         val mWhatsNewApps: List<LocalApp> = LabAppManager
             .getActivityList(context)
@@ -388,8 +413,6 @@ class MainActivityViewModel : BaseViewModel() {
             }
         }
     }
-
-    fun launchSettings() = mNavigator?.callSettingsActivity()
 
     private fun launchIntentForPackage(packageName: String) {
         mNavigator?.callIntentForPackageActivity(packageName)

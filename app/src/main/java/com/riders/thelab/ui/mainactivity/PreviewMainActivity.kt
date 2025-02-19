@@ -62,11 +62,8 @@ import timber.log.Timber
 
 @Composable
 fun MainContent(
-    viewModel: MainActivityViewModel,
     dynamicIslandUiState: IslandState,
     isDynamicIslandVisible: Boolean,
-    onUpdateDynamicIslandState: (IslandState) -> Unit,
-    onUpdateDynamicIslandVisible: (Boolean) -> Unit,
     searchedAppRequest: String,
     onSearchAppRequestChanged: (String) -> Unit,
     filteredList: List<App>,
@@ -76,7 +73,7 @@ fun MainContent(
     isKeyboardVisible: Boolean,
     onUpdateKeyboardVisible: (Boolean) -> Unit,
     isPagerAutoScroll: Boolean,
-    onLaunchSettings: () -> Unit
+    uiEvent: (UiEvent) -> Unit
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
@@ -154,8 +151,16 @@ fun MainContent(
                                         keyboardController?.hide()
 
                                         if (dynamicIslandUiState is IslandState.SearchState) {
-                                            onUpdateDynamicIslandState(IslandState.DefaultState)
-                                            onUpdateDynamicIslandVisible(false)
+                                            uiEvent.invoke(
+                                                UiEvent.OnUpdateDynamicIslandState(
+                                                    IslandState.DefaultState
+                                                )
+                                            )
+                                            uiEvent.invoke(
+                                                UiEvent.OnUpdateDynamicIslandVisible(
+                                                    false
+                                                )
+                                            )
                                         }
                                     }
                                 }
@@ -172,23 +177,21 @@ fun MainContent(
                         GridItemSpan(maxCurrentLineSpan)
                     }) {
                         Header(
-                            viewModel = viewModel,
                             whatsNewList = whatsNewList,
                             isKeyboardVisible = isKeyboardVisible,
                             pagerAutoScroll = isPagerAutoScroll,
-                            onSearchClicked = {
-                                onUpdateDynamicIslandVisible(true)
-                                onUpdateDynamicIslandState(IslandState.SearchState())
-                            },
-                            onSettingsClicked = onLaunchSettings
-                        )
+                            onSearchClicked = { uiEvent.invoke(UiEvent.OnSearchClicked) }
+                        ) { uiEvent.invoke(UiEvent.OnSettingsClicked) }
                     }
 
                     items(
                         items = filteredList,
                         key = { it.id }
                     ) { appItem ->
-                        App(item = appItem)
+                        App(
+                            item = appItem,
+                            onAppItemClick = { uiEvent.invoke(UiEvent.OnAppItemClicked(it)) }
+                        )
                     }
 
                     if (searchedAppRequest.trim() != "" && filteredList.isEmpty()) {
@@ -205,7 +208,7 @@ fun MainContent(
                 // Dynamic Island
                 AnimatedVisibility(
                     modifier = Modifier.align(Alignment.TopCenter),
-                    visible = isDynamicIslandVisible,
+                    visible = dynamicIslandUiState !is IslandState.DefaultState,
                     enter = slideInVertically {
                         // Slide in from 40 dp from the top.
                         with(density) { -40.dp.roundToPx() }
@@ -221,9 +224,15 @@ fun MainContent(
                     DynamicIsland(
                         islandState = dynamicIslandUiState,
                         searchedAppRequest = searchedAppRequest,
-                        onSearchAppRequestChanged = onSearchAppRequestChanged,
+                        onSearchAppRequestChanged = { uiEvent.invoke(UiEvent.OnUpdateSearchQuery(it)) },
                         isMicrophoneEnabled = isMicrophoneEnabled,
-                        onUpdateMicrophoneEnabled = onUpdateMicrophoneEnabled,
+                        onUpdateMicrophoneEnabled = {
+                            uiEvent.invoke(
+                                UiEvent.OnUpdateMicrophoneEnabled(
+                                    it
+                                )
+                            )
+                        },
                         onUpdateKeyboardVisible = onUpdateKeyboardVisible
                     )
                 }
@@ -240,20 +249,20 @@ fun MainContent(
         }
     }
 
-    LaunchedEffect(dynamicIslandUiState) {
+    /*LaunchedEffect(dynamicIslandUiState) {
         Timber.d("LaunchedEffect | dynamic island state: ${dynamicIslandUiState.javaClass.simpleName}")
         if ((dynamicIslandUiState is IslandState.SearchState ||
                     dynamicIslandUiState is IslandState.CallState ||
                     dynamicIslandUiState is IslandState.NetworkState.Available ||
                     dynamicIslandUiState is IslandState.NetworkState.Lost ||
                     dynamicIslandUiState is IslandState.NetworkState.Unavailable)
-            && isKeyboardVisible
+            && !isKeyboardVisible
         ) {
-            onUpdateDynamicIslandVisible(true)
+            uiEvent.invoke(UiEvent.OnUpdateDynamicIslandVisible(true))
         } else {
-            onUpdateDynamicIslandVisible(false)
+            uiEvent.invoke(UiEvent.OnUpdateDynamicIslandVisible(false))
         }
-    }
+    }*/
 }
 
 
@@ -299,21 +308,17 @@ private fun PreviewMainContent(@PreviewParameter(IslandStatePreviewProvider::cla
 
     TheLabTheme {
         MainContent(
-            viewModel = MainActivityViewModel(),
             dynamicIslandUiState = state,
+            isDynamicIslandVisible = true,
+            searchedAppRequest = "Colors",
+            onSearchAppRequestChanged = { },
             filteredList = appList,
             whatsNewList = appList,
-            searchedAppRequest = "Colors",
-            isKeyboardVisible = true,
-            isPagerAutoScroll = true,
-            onSearchAppRequestChanged = { },
-            onLaunchSettings = {},
             isMicrophoneEnabled = false,
             onUpdateMicrophoneEnabled = {},
+            isKeyboardVisible = true,
             onUpdateKeyboardVisible = {},
-            onUpdateDynamicIslandState = {},
-            onUpdateDynamicIslandVisible = {},
-            isDynamicIslandVisible = true
-        )
+            isPagerAutoScroll = true
+        ) {}
     }
 }
