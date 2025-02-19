@@ -196,33 +196,31 @@ class LoginViewModel @Inject constructor(private val repository: IRepository) : 
     //
     ///////////////////////////////
     fun observeNetworkState(networkManager: LabNetworkManager) {
-        Timber.d("observeNetworkState()")
-
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             networkManager.getNetworkState().collect { networkState ->
                 when (networkState) {
                     is NetworkState.Available -> {
-                        Timber.d("network state is Available. All set.")
+                        Timber.d("observeNetworkState() | network state is Available. All set.")
                         updateHasInternetConnection(true)
                     }
 
                     is NetworkState.Losing -> {
-                        Timber.w("network state is Losing. Internet connection about to be lost")
+                        Timber.w("observeNetworkState() | network state is Losing. Internet connection about to be lost")
                         updateHasInternetConnection(false)
                     }
 
                     is NetworkState.Lost -> {
-                        Timber.e("network state is Lost. Should not allow network calls initialization")
+                        Timber.e("observeNetworkState() | network state is Lost. Should not allow network calls initialization")
                         updateHasInternetConnection(false)
                     }
 
                     is NetworkState.Unavailable -> {
-                        Timber.e("network state is Unavailable. Should not allow network calls initialization")
+                        Timber.e("observeNetworkState() | network state is Unavailable. Should not allow network calls initialization")
                         updateHasInternetConnection(false)
                     }
 
                     is NetworkState.Undefined -> {
-                        Timber.i("network state is Undefined. Do nothing")
+                        Timber.i("observeNetworkState() | network state is Undefined. Do nothing")
                     }
                 }
             }
