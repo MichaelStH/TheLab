@@ -1,6 +1,6 @@
 [versions]
 # Gradle version
-androidGradlePlugin = "8.8.0"
+androidGradlePlugin = "8.8.1"
 # Google Services
 playServicesGradlePlugin = "4.4.2"
 crashlyticsGradlePlugin = "3.0.3"
@@ -115,7 +115,7 @@ landscapist = "2.2.13"
 lint = "31.8.1"
 location = "21.3.0"
 lottie = "6.5.2"
-maps = "19.0.0"
+maps = "19.1.0"
 mapsCompose = "3.1.1"
 material = "1.12.0"
 mapsUtils = "3.5.3"

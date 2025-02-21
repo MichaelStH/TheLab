@@ -245,37 +245,28 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
         Timber.d("checkPermissions() | has all Permissions ?: $hasPermission")
 
         mPermissionManager?.let {
-            it.request(Permission.Location)
-                .rationale("Location is needed to discover some features")
+            it
+                .request(Permission.Location, Permission.AudioRecord)
+                .rationale("Location is needed to discover some features\nAudio Record is needed to use the vocal assistant. You can enable this feature in the settings screen")
                 .checkPermission { granted: Boolean ->
 
                     if (!granted) {
                         Timber.e("Permissions are denied. User may access to app with limited location related features")
 
                     } else {
-                        it.request(Permission.AudioRecord)
-                            .rationale("Audio Record is needed to use the vocal assistant. You can enable this feature in the settings screen")
-                            .checkPermission { granted: Boolean ->
 
-                                if (!granted) {
-                                    Timber.e("Permissions are denied. User may access to app with limited audio related features")
+                        // Variables
+                        initActivityVariables()
 
-                                } else {
+                        // Retrieve applications
+                        mViewModel.retrieveApplications(
+                            TheLabApplication.getInstance().getContext()
+                        )
+                        mViewModel.retrieveRecentApps(
+                            TheLabApplication.getInstance().getContext()
+                        )
 
-                                    // Variables
-                                    initActivityVariables()
-
-                                    // Retrieve applications
-                                    mViewModel.retrieveApplications(
-                                        TheLabApplication.getInstance().getContext()
-                                    )
-                                    mViewModel.retrieveRecentApps(
-                                        TheLabApplication.getInstance().getContext()
-                                    )
-
-                                    startVoiceService()
-                                }
-                            }
+                        startVoiceService()
                     }
                 }
         }
@@ -302,7 +293,12 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
         val serviceIntent = Intent(this, TheLabVoiceAssistantService::class.java).apply {
             action = getString(R.string.voice_assistant_service_action_start_listening)
         }
-        ContextCompat.startForegroundService(this, serviceIntent)
+
+        if (LabCompatibilityManager.isOreo()) {
+            ContextCompat.startForegroundService(this, serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
     }
 
     private fun registerLocationReceiver() {
