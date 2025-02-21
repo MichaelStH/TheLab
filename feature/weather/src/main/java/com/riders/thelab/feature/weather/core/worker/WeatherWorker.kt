@@ -18,8 +18,8 @@ import com.riders.thelab.core.data.IRepository
 import com.riders.thelab.core.data.local.model.weather.ForecastWeatherWidgetModel
 import com.riders.thelab.core.data.local.model.weather.TemperatureModel
 import com.riders.thelab.core.data.local.model.weather.WeatherWidgetModel
+import com.riders.thelab.core.data.local.model.weather.toModel
 import com.riders.thelab.core.data.remote.dto.weather.OneCallWeatherResponse
-import com.riders.thelab.core.data.remote.dto.weather.toTemperatureModel
 import com.riders.thelab.core.ui.R
 import com.riders.thelab.feature.weather.utils.WeatherUtils
 import dagger.assisted.Assisted
@@ -218,7 +218,7 @@ class WeatherWorker @AssistedInject constructor(
                 this.map {
                     ForecastWeatherWidgetModel(
                         day = DateTimeUtils.getDayFromTime(it.dateTimeUTC),
-                        temperature = it.temperature.toTemperatureModel(),
+                        temperature = it.temperature.toModel(),
                         icon = it.weather[0].icon
                     )
                 }.toList()

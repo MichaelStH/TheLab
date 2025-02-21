@@ -1,8 +1,8 @@
 package com.riders.thelab.feature.weather.ui
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.riders.thelab.core.data.local.model.compose.weather.WeatherCityUIState
 import com.riders.thelab.core.data.local.model.compose.weather.WeatherUIState
+import com.riders.thelab.core.data.local.model.compose.weather.WeatherDataState
 import com.riders.thelab.core.data.local.model.weather.TemperatureModel
 import com.riders.thelab.core.data.local.model.weather.WeatherModel
 
@@ -59,30 +59,26 @@ private val mockWeather: WeatherModel = WeatherModel(
 )
 
 
-class PreviewProviderWeather : PreviewParameterProvider<WeatherUIState> {
+class PreviewProviderWeather : PreviewParameterProvider<WeatherModel> {
+    override val values: Sequence<WeatherModel> get() = sequenceOf(mockWeather)
+}
+
+class PreviewProviderWeatherDataState : PreviewParameterProvider<WeatherDataState> {
+    override val values: Sequence<WeatherDataState>
+        get() = sequenceOf(
+            WeatherDataState.Loading,
+            WeatherDataState.Error(Exception("Error while downloading weather data")),
+            WeatherDataState.SuccessWeatherData(true),
+            WeatherDataState.SuccessWeatherData(false),
+        )
+}
+
+class PreviewProviderWeatherUIState : PreviewParameterProvider<WeatherUIState> {
+
     override val values: Sequence<WeatherUIState>
         get() = sequenceOf(
-            WeatherUIState.Loading,
-            WeatherUIState.Error(),
+            WeatherUIState.None,
             WeatherUIState.Success(mockWeather),
-            WeatherUIState.SuccessWeatherData(true),
-            WeatherUIState.SuccessWeatherData(false),
+            WeatherUIState.Error(),
         )
 }
-
-class PreviewProviderWeatherCity : PreviewParameterProvider<WeatherCityUIState> {
-    override val values: Sequence<WeatherCityUIState>
-        get() = sequenceOf(
-            WeatherCityUIState.None,
-            WeatherCityUIState.Success(mockWeather),
-            WeatherCityUIState.Error(),
-        )
-}
-
-/*
-class PreviewProviderDailyWeather : PreviewParameterProvider<DailyWeather> {
-    override val values: Sequence<DailyWeather>
-        get() = sequenceOf(
-            DailyWeather()
-        )
-}*/

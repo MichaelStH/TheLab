@@ -6,19 +6,19 @@ import java.io.Serializable
 @kotlinx.serialization.Serializable
 data class CurrentWeather(
     @SerialName("dt")
-    val dateTimeUTC: Long = 0,
+    val dateTimeUTC: Long = 0L,
 
     @SerialName("sunrise")
-    val sunrise: Long = 0,
+    val sunrise: Long = 0L,
 
     @SerialName("sunset")
-    val sunset: Long = 0,
+    val sunset: Long = 0L,
 
     @SerialName("moonrise")
-    val moonrise: Long = 0,
+    val moonrise: Long = 0L,
 
     @SerialName("moonset")
-    val moonset: Long = 0,
+    val moonset: Long = 0L,
 
     @SerialName("moon_phase")
     val moonPhase: Double = 0.0,

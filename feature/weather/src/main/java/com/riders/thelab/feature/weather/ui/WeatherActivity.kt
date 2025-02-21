@@ -29,11 +29,11 @@ import com.riders.thelab.core.common.network.LabNetworkManager
 import com.riders.thelab.core.common.utils.LabLocationManager
 import com.riders.thelab.core.common.utils.toLocation
 import com.riders.thelab.core.data.local.model.Permission
+import com.riders.thelab.core.data.local.model.compose.weather.WeatherDataState
 import com.riders.thelab.core.data.local.model.compose.weather.WeatherUIState
 import com.riders.thelab.core.permissions.PermissionManager
 import com.riders.thelab.core.ui.compose.base.BaseComponentActivity
 import com.riders.thelab.core.ui.compose.theme.TheLabTheme
-import com.riders.thelab.core.ui.compose.utils.findActivity
 import com.riders.thelab.core.ui.data.SnackBarType
 import com.riders.thelab.core.ui.utils.UIManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,6 +68,8 @@ class WeatherActivity : BaseComponentActivity(), LocationListener {
         Timber.d("onCreate()")
         super.onCreate(savedInstanceState)
 
+        mWeatherViewModel.initWeakReference(this@WeatherActivity)
+
         checkLocationPermissions()
     }
 
@@ -99,7 +101,7 @@ class WeatherActivity : BaseComponentActivity(), LocationListener {
 
                 if (!it.canGetLocation()) {
                     Timber.e("!it.canGetLocation() | WeatherUIState.Error()")
-                    mWeatherViewModel.updateUIState(WeatherUIState.Error())
+                    mWeatherViewModel.updateWeatherDataState(WeatherDataState.Error())
                     return
                 } else {
                     mWeatherViewModel.fetchCities(this@WeatherActivity)
@@ -154,8 +156,8 @@ class WeatherActivity : BaseComponentActivity(), LocationListener {
                         repeatOnLifecycle(Lifecycle.State.STARTED) {
                             setContent {
                                 val context = LocalContext.current
-                                val weatherUiState by mWeatherViewModel.weatherUiState.collectAsStateWithLifecycle()
-                                val weatherCityUiState by mWeatherViewModel.weatherCityUiState.collectAsStateWithLifecycle()
+                                val weatherDataState: WeatherDataState by mWeatherViewModel.weatherDataState.collectAsStateWithLifecycle()
+                                val weatherUiState: WeatherUIState by mWeatherViewModel.weatherUiState.collectAsStateWithLifecycle()
                                 val citySearch by mWeatherViewModel.searchText.collectAsStateWithLifecycle()
                                 /*val citySearchQuery by mWeatherViewModel.citySearchQuery.collectAsStateWithLifecycle(
                                     initialValue = emptyList()
@@ -168,44 +170,25 @@ class WeatherActivity : BaseComponentActivity(), LocationListener {
                                         color = MaterialTheme.colorScheme.background
                                     ) {
                                         WeatherContent(
+                                            weatherDataState = weatherDataState,
                                             weatherUiState = weatherUiState,
-                                            weatherCityUiState = weatherCityUiState,
                                             iconState = mWeatherViewModel.iconState,
-                                            onRetryRequest = {
-                                                mWeatherViewModel.retry()
-                                                (context.findActivity() as WeatherActivity).onResume()
-                                            },
+                                            /*         onRetryRequest = {
+                                                         mWeatherViewModel.retry()
+                                                         (context.findActivity() as WeatherActivity).onResume()
+                                                     },*/
                                             searchMenuExpanded = mWeatherViewModel.expanded,
-                                            onUpdateSearchMenuExpanded = mWeatherViewModel::updateExpanded,
                                             searchCityQuery = citySearch,
-                                            onUpdateSearchText = mWeatherViewModel::updateSearchText,
                                             suggestions = mWeatherViewModel.suggestions,
-                                            cityMaxTemp = mWeatherViewModel.cityMaxTemp,
-                                            cityMinTemp = mWeatherViewModel.cityMinTemp,
-                                            weatherAddress = mWeatherViewModel.weatherAddress,
-                                            onFetchWeatherRequest = { latitude, longitude ->
-                                                mWeatherViewModel.fetchWeather(
-                                                    (latitude to longitude).toLocation()
-                                                )
-                                            },
                                             isWeatherMoreDataVisible = mWeatherViewModel.isWeatherMoreDataVisible,
-                                            onUpdateMoreDataVisibility = mWeatherViewModel::updateMoreDataVisibility,
-                                            onGetMaxMinTemperature = mWeatherViewModel::getMaxMinTemperature,
-                                            onGetCityNameWithCoordinates = { latitude, longitude ->
-                                                mWeatherViewModel.getCityNameWithCoordinates(
-                                                    (context.findActivity() as WeatherActivity),
-                                                    latitude,
-                                                    longitude
-                                                )
+                                            ) { event ->
+                                            when (event) {
+                                                is UiEvent.OnMyLocationClicked -> fetchCurrentLocation()
+                                                else -> mWeatherViewModel.onEvent(event)
                                             }
-                                        )
+                                        }
                                     }
                                 }
-
-                                /*LaunchedEffect(citySearch) {
-                                    Timber.e("search list: ${citySearchQuery.toString()}")
-
-                                }*/
                             }
                         }
                     }
@@ -288,7 +271,7 @@ class WeatherActivity : BaseComponentActivity(), LocationListener {
 
         if (!iconState) {
             mWeatherViewModel.updateIconState(false)
-            mWeatherViewModel.updateUIState(WeatherUIState.Error())
+            mWeatherViewModel.updateWeatherDataState(WeatherDataState.Error())
         } else {
             mWeatherViewModel.updateIconState(true)
 //            mWeatherViewModel.fetchCities(this@WeatherActivity)
