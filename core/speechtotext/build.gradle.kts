@@ -14,9 +14,11 @@ dependencies {
     ///////////////////////////////////
     // Project
     ///////////////////////////////////
+    implementation(project(":core:common"))
     implementation(project(":core:ui"))
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.google.cloud.texttospeech)
 
     /////////////////////////////
     // Tests Dependencies
