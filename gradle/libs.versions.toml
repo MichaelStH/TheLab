@@ -11,7 +11,7 @@ protobufPlugin = "0.9.4"
 
 # Dependencies version
 accompanist = "0.34.0"
-androidDesugarJdkLibs = "2.1.4"
+androidDesugarJdkLibs = "2.1.5"
 androidxActivity = "1.10.0"
 androidxAppCompat = "1.7.0"
 androidxAppSearch = "1.1.0-beta01"
@@ -69,7 +69,7 @@ blurry = "4.0.1"
 coil = "2.6.0"
 # Firebase
 firebaseBom = "33.9.0"
-firebaseAds = "23.6.0"
+firebaseAds = "24.0.0"
 # Google Api
 googleApiClient = "2.1.2"
 googleApiClientAndroid = "2.1.2"
@@ -103,7 +103,7 @@ jtransforms = "3.1"
 junit = "1.1.5"
 junit4 = "4.13.2"
 # Kotlin (for gradle plugin version and dependency)
-kotlin = "2.1.0"
+kotlin = "2.1.10"
 kotlinxCoroutines = "1.10.1"
 kotlinxDatetime = "0.6.1"
 kotlinPlayServices = "1.10.1"
