@@ -15,9 +15,11 @@ plugins {
     alias(libs.plugins.playservices) apply false
     alias(libs.plugins.secrets) apply false
     alias(libs.plugins.ksp) apply false
-    //  Firebase
+    // Firebase
     alias(libs.plugins.crashlytics) apply false
     alias(libs.plugins.performances) apply false
+    // Protobuf
+    alias(libs.plugins.protobuf) apply false
 }
 
 tasks.register("clean", Delete::class) {

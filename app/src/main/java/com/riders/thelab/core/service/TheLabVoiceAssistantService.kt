@@ -168,7 +168,7 @@ class TheLabVoiceAssistantService : Service(), RecognitionListener {
     }
 
     private fun startListening() {
-        Timber.i("startListening()")
+        Timber.i("startListeningLegacy()")
         if (!isListening /*&& SpeechRecognizer.isRecognitionAvailable(this)*/) {
             speechRecognizer?.startListening(speechRecognizerIntent)
             isListening = true

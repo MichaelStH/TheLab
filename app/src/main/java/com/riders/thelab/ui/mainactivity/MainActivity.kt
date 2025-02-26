@@ -369,9 +369,9 @@ class MainActivity : BaseComponentActivity(), LocationListener, OnGpsListener, R
                     initSpeechToText()
 
                     // Start listening (TTS)
-                    Timber.i("launchSpeechToText() | startListening() ... ")
-//                    speech?.startListening(recognizerIntent)
-                    mSpeechToTextManager?.startListening()
+                    Timber.i("launchSpeechToText() | startListeningLegacy() ... ")
+//                    speech?.startListeningLegacy(recognizerIntent)
+                    mSpeechToTextManager?.startListeningLegacy()
                 }
             }
     }
