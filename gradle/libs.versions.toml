@@ -76,6 +76,7 @@ googleApiClientAndroid = "2.1.2"
 googleApiClientOAuth = "1.34.1"
 googleApiDriveV3 = "v3-rev20221219-2.0.0"
 googleApiClientJackson2 = "2.1.2"
+googleCloudTextToSpeech = "2.57.0"
 googleHttpClient = "1.45.0"
 googleHttpClientGson = "1.44.2"
 googleIdentity = "1.1.1"
@@ -102,6 +103,7 @@ jacoco = "0.8.7"
 jtransforms = "3.1"
 junit = "1.1.5"
 junit4 = "4.13.2"
+koin = "4.1.0-Beta5"
 # Kotlin (for gradle plugin version and dependency)
 kotlin = "2.1.10"
 kotlinxCoroutines = "1.10.1"
@@ -109,11 +111,13 @@ kotlinxDatetime = "0.6.1"
 kotlinPlayServices = "1.10.1"
 kotlinxMetadataJvm = "0.4.0"
 kotlinxSerializationJson = "1.7.3"
+ktor = "3.0.2"
 # KSP - Kotlin Symbol Processing (for gradle's plugin version and dependency)
-ksp = "2.1.0-1.0.29"
+ksp = "2.1.10-1.0.30"
 landscapist = "2.2.13"
 lint = "31.8.1"
 location = "21.3.0"
+logback = "1.0.0"
 lottie = "6.5.2"
 maps = "19.1.0"
 mapsCompose = "3.1.1"
@@ -290,6 +294,7 @@ google-api-client-oauth-jackson2 = { group = "com.google.api-client", name = "go
 google-api-client-oauth-java6 = { group = "com.google.oauth-client", name = "google-oauth-client-java6", version.ref = "googleApiClientOAuth" }
 google-api-client-jetty = { group = "com.google.oauth-client", name = "google-oauth-client-jetty", version.ref = "googleApiClientOAuth" }
 google-api-drive = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "googleApiDriveV3" }
+google-cloud-texttospeech = { group = "com.google.cloud", name = "google-cloud-texttospeech", version.ref = "googleCloudTextToSpeech" }
 google-guava = { group = "com.google.guava", name = "guava", version.ref = "googleGuava" }
 google-guava-listenablefuture = { group = "com.google.guava", name = "listenablefuture", version.ref = "googleGuavaListenableFuture" }
 google-http-client = { group = "com.google.http-client", name = "google-http-client-android", version.ref = "googleHttpClient" }
@@ -311,6 +316,7 @@ glide-compose = { group = "com.github.bumptech.glide", name = "compose", version
 glide-blurry = { group = "jp.wasabeef", name = "blurry", version.ref = "blurry" }
 glide-landscapist = { group = "com.github.skydoves", name = "landscapist-glide", version.ref = "landscapist" }
 glide-transformation = { group = "jp.wasabeef", name = "glide-transformations", version.ref = "glideTransformation" }
+# Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
@@ -319,6 +325,25 @@ hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hi
 # Fast Fourier Transform (FFT)
 jtransforms = { group = "com.github.wendykierp", name = "JTransforms", version.ref = "jtransforms" }
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
+# Koin
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
+koin-androidx-navigation = { group = "io.insert-koin", name = "koin-androidx-navigation" }
+koin-androidx-startup = { group = "io.insert-koin", name = "koin-androidx-startup" }
+koin-androidx-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager" }
+koin-compose = { group = "io.insert-koin", name = "koin-compose" }
+koin-compose-navigation = { group = "io.insert-koin", name = "koin-compose-navigation" }
+koin-compose-viewmodel-navigation = { group = "io.insert-koin", name = "koin-compose-viewmodel-navigation" }
+koin-core = { group = "io.insert-koin", name = "koin-core" }
+koin-core-coroutines = { group = "io.insert-koin", name = "koin-core-coroutines" }
+koin-core-viewmodel = { group = "io.insert-koin", name = "koin-core-viewmodel" }
+koin-ktor = { group = "io.insert-koin", name = "koin-ktor" }
+koin-logger = { group = "io.insert-koin", name = "koin-logger-slf4j" }
+koin-test = { group = "io.insert-koin", name = "koin-test" }
+koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4" }
+koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5" }
+# Kotlin
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
@@ -331,6 +356,19 @@ kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metada
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "kotlinPlayServices" }
 kotools-types = { group = "org.kotools", name = "types", version.ref = "types" }
+# Ktor
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-client-darwin = { group = "io.ktor", name = "ktor-client-ios", version.ref = "ktor" }
+ktor-client-ios = { group = "io.ktor", name = "ktor-client-ios", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-timeout = { group = "io.ktor", name = "ktor-client-timeout", version.ref = "ktor" }
+logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "lint" }
 location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "location" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
